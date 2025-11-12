@@ -21,6 +21,13 @@ export const dataSourceOptions: DataSourceOptions = {
   synchronize: false,
 
   logging: process.env.TYPEORM_LOGGING === 'true',
+
+  // Connection pool configuration
+  extra: {
+    connectionTimeoutMillis: 30000,
+    idleTimeoutMillis: 30000,
+    max: 20,
+  },
 };
 
 const dataSource = new DataSource(dataSourceOptions);

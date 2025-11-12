@@ -1,4 +1,14 @@
-import { IsString, IsUUID, IsEnum, IsDateString, IsNumber, IsOptional, IsArray, ValidateNested, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsEnum,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+  IsNotEmpty,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { InvoiceType } from '../entities/invoice.entity';
 import { CreateInvoiceItemDto } from '../../invoice-items/dto/create-invoice-item.dto';
@@ -8,15 +18,13 @@ export class CreateInvoiceDto {
   @IsUUID()
   customerId: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  invoiceNumber: string;
+  invoiceNumber?: string;
 
   @IsNotEmpty()
   @IsEnum(InvoiceType)
   invoiceType: InvoiceType;
-
-
 
   @IsOptional()
   @IsDateString()

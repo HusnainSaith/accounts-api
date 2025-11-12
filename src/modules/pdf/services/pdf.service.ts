@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as handlebars from 'handlebars';
-
+import * as puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Invoice } from '../../invoices/entities/invoice.entity';
 
 @Injectable()
@@ -9,13 +11,32 @@ export class PdfService {
     invoice: Invoice,
     language: 'en' | 'ar' = 'en',
   ): Promise<Buffer> {
-    // Simplified PDF generation - in production, use puppeteer or similar
+    const templatePath = path.join(process.cwd(), 'src', 'modules', 'pdf', 'templates', `invoice-${language}.hbs`);
+    const templateContent = fs.readFileSync(templatePath, 'utf8');
+    const template = handlebars.compile(templateContent);
+
     const qrCodeData = await this.generateZATCAQRCode(invoice);
+    
+    const html = template({
+      invoice,
+      company: invoice.company,
+      customer: invoice.customer,
+      items: invoice.invoiceItems,
+      qrCode: qrCodeData
+    });
 
-    const pdfContent = `Invoice ${invoice.invoiceNumber} - ${invoice.company.name} - Total: ${invoice.totalAmount} ${invoice.currencyCode}`;
-
-    // Return mock PDF buffer - in production, generate actual PDF
-    return Buffer.from(pdfContent, 'utf8');
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setContent(html);
+    
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '20px', bottom: '20px', left: '20px', right: '20px' }
+    });
+    
+    await browser.close();
+    return Buffer.from(pdfBuffer);
   }
 
   private async generateZATCAQRCode(invoice: Invoice): Promise<string> {
@@ -33,10 +54,15 @@ export class PdfService {
     data: any,
     language: 'en' | 'ar' = 'en',
   ): Promise<Buffer> {
-    // Simplified VAT report generation
-    const reportContent = `VAT Report - Language: ${language}`;
-
-    // Return mock PDF buffer - in production, generate actual PDF
-    return Buffer.from(reportContent, 'utf8');
+    const html = `<html><body><h1>VAT Report - ${language}</h1></body></html>`;
+    
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setContent(html);
+    
+    const pdfBuffer = await page.pdf({ format: 'A4' });
+    await browser.close();
+    
+    return Buffer.from(pdfBuffer);
   }
 }

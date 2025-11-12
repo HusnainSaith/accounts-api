@@ -5,6 +5,7 @@ import {
   CallHandler,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { tap, finalize } from 'rxjs/operators';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -29,6 +30,14 @@ export class RLSInterceptor implements NestInterceptor {
         await queryRunner.release();
         throw error;
       }
+
+      return next.handle().pipe(
+        finalize(async () => {
+          if (queryRunner && !queryRunner.isReleased) {
+            await queryRunner.release();
+          }
+        })
+      );
     }
 
     return next.handle();

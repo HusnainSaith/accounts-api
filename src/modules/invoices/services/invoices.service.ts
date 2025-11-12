@@ -21,6 +21,11 @@ export class InvoicesService {
   async create(createInvoiceDto: CreateInvoiceDto, companyId: string, userId: string): Promise<Invoice> {
     const { invoiceItems, ...invoiceData } = createInvoiceDto;
     
+    // Generate invoice number if not provided
+    if (!invoiceData.invoiceNumber) {
+      invoiceData.invoiceNumber = await this.generateInvoiceNumber(companyId);
+    }
+    
     // Calculate totals
     let subtotal = 0;
     let vatAmount = 0;
@@ -141,11 +146,38 @@ export class InvoicesService {
   }
 
   async generateInvoiceNumber(companyId: string): Promise<string> {
-    const year = new Date().getFullYear();
-    const count = await this.invoicesRepository.count({
-      where: { companyId }
-    });
-    return `INV-${year}-${String(count + 1).padStart(4, '0')}`;
+    // Get company to extract first 3 characters of name
+    const company = await this.invoicesRepository.manager
+      .createQueryBuilder()
+      .select('name')
+      .from('companies', 'company')
+      .where('company.id = :companyId', { companyId })
+      .getRawOne();
+    
+    const companyPrefix = company?.name?.substring(0, 3).toUpperCase() || 'INV';
+    
+    // Get current date in MM-DD format
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    
+    // Find the highest sequence number for today's invoices with this prefix
+    const todayPrefix = `${companyPrefix}-${month}-${day}-`;
+    
+    const lastInvoice = await this.invoicesRepository
+      .createQueryBuilder('invoice')
+      .where('invoice.companyId = :companyId', { companyId })
+      .andWhere('invoice.invoiceNumber LIKE :prefix', { prefix: `${todayPrefix}%` })
+      .orderBy('invoice.invoiceNumber', 'DESC')
+      .getOne();
+    
+    let sequenceNumber = 1;
+    if (lastInvoice) {
+      const lastSequence = lastInvoice.invoiceNumber.split('-').pop();
+      sequenceNumber = parseInt(lastSequence || '0') + 1;
+    }
+    
+    return `${todayPrefix}${String(sequenceNumber).padStart(4, '0')}`;
   }
 
   async generateQRCode(invoice: Invoice): Promise<string | null> {

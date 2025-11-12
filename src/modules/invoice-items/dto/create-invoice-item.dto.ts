@@ -1,9 +1,15 @@
-import { IsString, IsUUID, IsNumber, IsOptional, Min, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsUUID,
+  IsNumber,
+  IsOptional,
+  Min,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class CreateInvoiceItemDto {
-  @IsOptional()
   @IsUUID()
-  itemId?: string;
+  itemId: string;
 
   @IsNotEmpty()
   @IsString()

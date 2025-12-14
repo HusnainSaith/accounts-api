@@ -1,8 +1,19 @@
-import { Controller, Post, Body, UseGuards, Request, UseFilters } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+  UseFilters,
+} from '@nestjs/common';
 import { DatabaseExceptionFilter } from '../../../common/filters/database-exception.filter';
 import { AuthService } from '../services/auth.service';
-import { LoginDto, RegisterDto } from '../dto/register.dto';
-import { ForgotPasswordDto, ResetPasswordDto, ChangePasswordDto } from '../dto/forgot-password.dto';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { ChangePasswordDto } from '../dto/change-password.dto';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Controller('auth')
@@ -21,7 +32,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('profile')
+  @Get('profile')
   getProfile(@Request() req: { user: unknown }) {
     return req.user;
   }
@@ -36,7 +47,7 @@ export class AuthController {
     return this.authService.resetPassword(
       resetPasswordDto.email,
       resetPasswordDto.token,
-      resetPasswordDto.newPassword
+      resetPasswordDto.newPassword,
     );
   }
 
@@ -44,19 +55,25 @@ export class AuthController {
   @Post('change-password')
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
-    @Request() req: { user: { id: string } }
+    @Request() req: { user: { id: string } },
   ) {
     return this.authService.changePassword(
       req.user.id,
       changePasswordDto.currentPassword,
-      changePasswordDto.newPassword
+      changePasswordDto.newPassword,
     );
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@Request() req: { headers: { authorization?: string } }) {
+  async logout(
+    @Request()
+    req: {
+      headers: { authorization?: string };
+      user: { id: string };
+    },
+  ) {
     const token = req.headers.authorization?.replace('Bearer ', '') || '';
-    return this.authService.logout(token);
+    return this.authService.logout(token, req.user.id);
   }
 }

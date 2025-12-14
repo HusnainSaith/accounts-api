@@ -4,6 +4,7 @@ import { Repository, Between } from 'typeorm';
 import { Invoice, InvoiceStatus } from '../../invoices/entities/invoice.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 import { Item } from '../../items/entities/item.entity';
+import { Expense } from '../../expenses/entities/expense.entity';
 import { VatReport, VatReportStatus } from '../../vat-reports/entities/vat-report.entity';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class DashboardService {
     private customersRepository: Repository<Customer>,
     @InjectRepository(Item)
     private itemsRepository: Repository<Item>,
+    @InjectRepository(Expense)
+    private expensesRepository: Repository<Expense>,
     @InjectRepository(VatReport)
     private vatReportsRepository: Repository<VatReport>,
   ) {}
@@ -26,6 +29,7 @@ export class DashboardService {
       pendingInvoices,
       totalCustomers,
       totalItems,
+      totalExpenses,
       recentInvoices
     ] = await Promise.all([
       this.invoicesRepository.count({ where: { companyId } }),
@@ -33,6 +37,7 @@ export class DashboardService {
       this.invoicesRepository.count({ where: { companyId, status: InvoiceStatus.SENT } }),
       this.customersRepository.count({ where: { companyId } }),
       this.itemsRepository.count({ where: { companyId, isActive: true } }),
+      this.expensesRepository.count({ where: { companyId } }),
       this.invoicesRepository.find({
         where: { companyId },
         relations: ['customer'],
@@ -48,15 +53,29 @@ export class DashboardService {
       .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
       .getRawOne();
 
-    const monthlyRevenue = await this.invoicesRepository
-      .createQueryBuilder('invoice')
-      .select('SUM(invoice.totalAmount)', 'total')
-      .where('invoice.companyId = :companyId', { companyId })
-      .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
-      .andWhere('invoice.paidAt >= :startOfMonth', { 
-        startOfMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
-      })
-      .getRawOne();
+    const [monthlyRevenue, monthlyExpenses] = await Promise.all([
+      this.invoicesRepository
+        .createQueryBuilder('invoice')
+        .select('SUM(invoice.totalAmount)', 'total')
+        .where('invoice.companyId = :companyId', { companyId })
+        .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
+        .andWhere('invoice.paidAt >= :startOfMonth', { 
+          startOfMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
+        })
+        .getRawOne(),
+      this.expensesRepository
+        .createQueryBuilder('expense')
+        .select('SUM(expense.amount)', 'total')
+        .where('expense.companyId = :companyId', { companyId })
+        .andWhere('expense.expenseDate >= :startOfMonth', { 
+          startOfMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1) 
+        })
+        .getRawOne()
+    ]);
+
+    const totalRevenueNum = Number(totalRevenue?.total || 0);
+    const monthlyRevenueNum = Number(monthlyRevenue?.total || 0);
+    const monthlyExpensesNum = Number(monthlyExpenses?.total || 0);
 
     return {
       stats: {
@@ -65,8 +84,11 @@ export class DashboardService {
         pendingInvoices,
         totalCustomers,
         totalItems,
-        totalRevenue: Number(totalRevenue?.total || 0),
-        monthlyRevenue: Number(monthlyRevenue?.total || 0)
+        totalExpenses,
+        totalRevenue: totalRevenueNum,
+        monthlyRevenue: monthlyRevenueNum,
+        monthlyExpenses: monthlyExpensesNum,
+        monthlyNetProfit: monthlyRevenueNum - monthlyExpensesNum
       },
       recentInvoices: recentInvoices.map(invoice => ({
         id: invoice.id,
@@ -80,25 +102,39 @@ export class DashboardService {
   }
 
   async getMonthlyRevenueChart(companyId: string) {
-    const months: { month: string; revenue: number }[] = [];
+    const months: { month: string; revenue: number; expenses: number; netProfit: number }[] = [];
     const currentDate = new Date();
     
     for (let i = 11; i >= 0; i--) {
       const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
       const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - i + 1, 1);
       
-      const revenue = await this.invoicesRepository
-        .createQueryBuilder('invoice')
-        .select('SUM(invoice.totalAmount)', 'total')
-        .where('invoice.companyId = :companyId', { companyId })
-        .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
-        .andWhere('invoice.paidAt >= :startDate', { startDate: date })
-        .andWhere('invoice.paidAt < :endDate', { endDate: nextMonth })
-        .getRawOne();
+      const [revenue, expenses] = await Promise.all([
+        this.invoicesRepository
+          .createQueryBuilder('invoice')
+          .select('SUM(invoice.totalAmount)', 'total')
+          .where('invoice.companyId = :companyId', { companyId })
+          .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
+          .andWhere('invoice.paidAt >= :startDate', { startDate: date })
+          .andWhere('invoice.paidAt < :endDate', { endDate: nextMonth })
+          .getRawOne(),
+        this.expensesRepository
+          .createQueryBuilder('expense')
+          .select('SUM(expense.amount)', 'total')
+          .where('expense.companyId = :companyId', { companyId })
+          .andWhere('expense.expenseDate >= :startDate', { startDate: date })
+          .andWhere('expense.expenseDate < :endDate', { endDate: nextMonth })
+          .getRawOne()
+      ]);
+
+      const revenueNum = Number(revenue?.total || 0);
+      const expensesNum = Number(expenses?.total || 0);
 
       months.push({
         month: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-        revenue: Number(revenue?.total || 0)
+        revenue: revenueNum,
+        expenses: expensesNum,
+        netProfit: revenueNum - expensesNum
       });
     }
 

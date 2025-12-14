@@ -17,6 +17,9 @@ export class Company {
   @Column({ length: 255 })
   name: string;
 
+  @Column({ name: 'name_ar', length: 255, nullable: true })
+  nameAr: string;
+
   @Column({ name: 'country_code', length: 3 })
   countryCode: string;
 
@@ -34,9 +37,20 @@ export class Company {
 
   @Column({ name: 'logo_url', length: 500, nullable: true })
   logoUrl: string;
+  @Column({ name: 'logo_s3_key', length: 500, nullable: true })
+  logoS3Key: string;
 
   @Column({ type: 'text', nullable: true })
   address: string;
+
+  @Column({ name: 'is_vat_registered', default: false })
+  isVatRegistered: boolean;
+
+  @Column({ type: 'jsonb', default: '{}' })
+  settings: Record<string, any>;
+
+  @Column({ name: 'default_vat_rate', type: 'decimal', precision: 5, scale: 2, default: 5.0 })
+  defaultVatRate: number;
 
   @Column({ length: 50, nullable: true })
   phone: string;

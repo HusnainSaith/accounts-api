@@ -33,27 +33,24 @@ export class PermissionsGuard implements CanActivate {
       throw new ForbiddenException('User not authenticated');
     }
 
-    // Get user with role and permissions
+    // Get user
     const userWithRole = await this.userRepository.findOne({
-      where: { id: user.id },
-      relations: ['roleEntity']
+      where: { id: user.id }
     });
 
-    if (!userWithRole?.roleEntity) {
+    if (!userWithRole?.role) {
       throw new ForbiddenException('User has no role assigned');
     }
 
-    // Get role with permissions
-    const roleWithPermissions = await this.roleRepository.findOne({
-      where: { id: (userWithRole.roleEntity as any).id },
-      relations: ['permissions']
-    });
-
-    if (!roleWithPermissions?.permissions) {
-      throw new ForbiddenException('Role has no permissions assigned');
+    // For now, grant all permissions to owners, basic permissions to others
+    const userPermissions: string[] = [];
+    if (userWithRole.role === 'owner') {
+      // Owner has all permissions
+      return true;
+    } else {
+      // Staff and accountant have basic permissions
+      userPermissions.push('users.read', 'customers.read', 'items.read', 'invoices.read', 'expenses.read');
     }
-
-    const userPermissions = roleWithPermissions.permissions.map((p: any) => p.permissionName);
 
     const hasPermission = requiredPermissions.some(permission => 
       userPermissions.includes(permission)

@@ -1,0 +1,180 @@
+{
+  "info": {
+    "name": "Hisab API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:3002"},
+    {"key": "token", "value": ""}
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{"key": "token", "value": "{{token}}"}]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Ali\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@123456\",\n  \"companyName\": \"Test Company LLC\",\n  \"countryCode\": \"AE\",\n  \"trn\": \"100123456789012\",\n  \"phone\": \"+971501234567\"\n}"
+            },
+            "url": "{{base_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["if (pm.response.code === 200) { pm.collectionVariables.set('token', pm.response.json().access_token); }"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@123456\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Get Companies",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Countries",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/countries"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerType\": \"business\",\n  \"name\": \"ABC Trading LLC\",\n  \"email\": \"abc@trading.com\",\n  \"phone\": \"+971501234571\",\n  \"trn\": \"100987654321098\",\n  \"isVatRegistered\": true\n}"
+            },
+            "url": "{{base_url}}/customers"
+          }
+        },
+        {
+          "name": "Get Customers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemCode\": \"CONS-001\",\n  \"name\": \"Consulting Services\",\n  \"unitPrice\": 500.00,\n  \"currencyCode\": \"AED\",\n  \"defaultVatRate\": 5.00,\n  \"isService\": true\n}"
+            },
+            "url": "{{base_url}}/items"
+          }
+        },
+        {
+          "name": "Get Items",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/items"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Get Invoices",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/invoices"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Get Expenses",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expenses"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "VAT Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/vat?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/stats"
+          }
+        }
+      ]
+    }
+  ]
+}

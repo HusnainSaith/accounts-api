@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { Invoice, InvoiceStatus } from '../../invoices/entities/invoice.entity';
 import { Customer } from '../../customers/entities/customer.entity';
+import { Expense } from '../../expenses/entities/expense.entity';
 import { VatReportDto, ProfitLossReportDto, BalanceSheetReportDto, CashFlowReportDto } from '../dto/report.dto';
 
 @Injectable()
@@ -12,6 +13,8 @@ export class ReportsService {
     private invoicesRepository: Repository<Invoice>,
     @InjectRepository(Customer)
     private customersRepository: Repository<Customer>,
+    @InjectRepository(Expense)
+    private expensesRepository: Repository<Expense>,
   ) {}
 
   async generateVatReport(vatReportDto: VatReportDto) {
@@ -55,7 +58,7 @@ export class ReportsService {
   async generateProfitLossReport(profitLossDto: ProfitLossReportDto) {
     this.validateDateRange(profitLossDto.startDate, profitLossDto.endDate);
 
-    const [paidInvoices, allInvoices] = await Promise.all([
+    const [paidInvoices, allInvoices, expenses] = await Promise.all([
       this.invoicesRepository.find({
         where: {
           companyId: profitLossDto.companyId,
@@ -68,12 +71,21 @@ export class ReportsService {
           companyId: profitLossDto.companyId,
           createdAt: Between(profitLossDto.startDate, profitLossDto.endDate)
         }
+      }),
+      this.expensesRepository.find({
+        where: {
+          companyId: profitLossDto.companyId,
+          expenseDate: Between(profitLossDto.startDate, profitLossDto.endDate)
+        }
       })
     ]);
 
     const revenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
     const vatCollected = paidInvoices.reduce((sum, inv) => sum + Number(inv.vatAmount), 0);
     const totalInvoiced = allInvoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
+    const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+    const vatPaid = expenses.reduce((sum, exp) => sum + Number(exp.vatAmount || 0), 0);
+    const netProfit = revenue - totalExpenses;
 
     return {
       period: { start: profitLossDto.startDate, end: profitLossDto.endDate },
@@ -83,15 +95,19 @@ export class ReportsService {
         collectionRate: totalInvoiced > 0 ? (revenue / totalInvoiced) * 100 : 0
       },
       expenses: {
-        total: 0 // Would need expense tracking implementation
+        total: totalExpenses,
+        vatPaid,
+        count: expenses.length
       },
       profitLoss: {
         grossProfit: revenue,
-        netProfit: revenue,
-        profitMargin: revenue > 0 ? 100 : 0
+        netProfit,
+        profitMargin: revenue > 0 ? (netProfit / revenue) * 100 : 0
       },
       taxes: {
-        vatCollected
+        vatCollected,
+        vatPaid,
+        netVat: vatCollected - vatPaid
       }
     };
   }
@@ -205,6 +221,76 @@ export class ReportsService {
         totalOutstanding: customerData.reduce((sum, c) => sum + c.outstandingAmount, 0)
       }
     };
+  }
+
+  async getDashboardChartData(companyId: string, months: number = 6): Promise<any[]> {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - months);
+
+    const [invoices, expenses] = await Promise.all([
+      this.invoicesRepository
+        .createQueryBuilder('invoice')
+        .select('DATE_TRUNC(\'month\', invoice.createdAt)', 'month')
+        .addSelect('SUM(invoice.subtotal)', 'revenue')
+        .addSelect('SUM(invoice.vatAmount)', 'vat')
+        .addSelect('COUNT(invoice.id)', 'count')
+        .where('invoice.companyId = :companyId', { companyId })
+        .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
+        .andWhere('invoice.createdAt >= :startDate', { startDate })
+        .groupBy('DATE_TRUNC(\'month\', invoice.createdAt)')
+        .orderBy('month', 'ASC')
+        .getRawMany(),
+      this.expensesRepository
+        .createQueryBuilder('expense')
+        .select('DATE_TRUNC(\'month\', expense.expenseDate)', 'month')
+        .addSelect('SUM(expense.amount)', 'total')
+        .addSelect('COUNT(expense.id)', 'count')
+        .where('expense.companyId = :companyId', { companyId })
+        .andWhere('expense.expenseDate >= :startDate', { startDate })
+        .groupBy('DATE_TRUNC(\'month\', expense.expenseDate)')
+        .orderBy('month', 'ASC')
+        .getRawMany(),
+    ]);
+
+    const chartData: any[] = [];
+    for (let i = 0; i < months; i++) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - (months - i - 1));
+      const monthKey = date.toISOString().substring(0, 7);
+
+      const invoiceData = invoices.find((inv) => inv.month?.substring(0, 7) === monthKey);
+      const expenseData = expenses.find((exp) => exp.month?.substring(0, 7) === monthKey);
+
+      chartData.push({
+        month: monthKey,
+        revenue: Number(invoiceData?.revenue || 0),
+        expenses: Number(expenseData?.total || 0),
+        netProfit: Number(invoiceData?.revenue || 0) - Number(expenseData?.total || 0),
+        vat: Number(invoiceData?.vat || 0),
+        invoiceCount: Number(invoiceData?.count || 0),
+        expenseCount: Number(expenseData?.count || 0),
+      });
+    }
+
+    return chartData;
+  }
+
+  async getExpensesByCategory(companyId: string, startDate: Date, endDate: Date) {
+    return this.expensesRepository
+      .createQueryBuilder('expense')
+      .select('category.name_en', 'categoryName')
+      .addSelect('category.name_ar', 'categoryNameAr')
+      .addSelect('SUM(expense.amount)', 'totalAmount')
+      .addSelect('COUNT(expense.id)', 'count')
+      .leftJoin('expense.category', 'category')
+      .where('expense.companyId = :companyId', { companyId })
+      .andWhere('expense.expenseDate BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .groupBy('category.id')
+      .addGroupBy('category.name_en')
+      .addGroupBy('category.name_ar')
+      .orderBy('totalAmount', 'DESC')
+      .getRawMany();
   }
 
   private validateDateRange(startDate: Date, endDate: Date) {

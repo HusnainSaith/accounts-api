@@ -10,6 +10,9 @@ export class InvoiceItem {
   @Column({ name: 'invoice_id' })
   invoiceId: string;
 
+  @Column({ name: 'company_id', nullable: true })
+  companyId: string;
+
   @Column({ name: 'item_id', nullable: true })
   itemId: string;
 
@@ -33,6 +36,9 @@ export class InvoiceItem {
 
   @Column({ name: 'line_vat_amount', type: 'decimal', precision: 18, scale: 2 })
   lineVatAmount: number;
+
+  @Column({ name: 'vat_tag', length: 50, nullable: true })
+  vatTag: string;
 
   @Column({ name: 'sort_order', type: 'int' })
   sortOrder: number;

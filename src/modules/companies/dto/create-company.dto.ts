@@ -1,5 +1,12 @@
-import { IsString, IsEmail, IsOptional, IsBoolean, IsIn, MinLength, IsNumber } from 'class-validator';
-
+import {
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsBoolean,
+  IsIn,
+  MinLength,
+  IsNumber,
+} from 'class-validator';
 export class CreateCompanyDto {
   @IsString()
   @MinLength(2)

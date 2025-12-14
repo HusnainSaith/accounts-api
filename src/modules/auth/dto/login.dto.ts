@@ -1,12 +1,9 @@
-export class LoginDto {
-  email: string;
-  password: string;
-}
+import { IsEmail, IsString } from 'class-validator';
 
-export class RegisterDto {
-  fullName: string;
+export class LoginDto {
+  @IsEmail()
   email: string;
+
+  @IsString()
   password: string;
-  companyName: string;
-  countryCode: string;
 }

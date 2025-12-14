@@ -1,0 +1,2558 @@
+{
+  "info": {
+    "name": "Hisab Accounting API",
+    "description": "Complete API collection for Hisab Accounting System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3002"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "company_id",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Ali\",\n  \"email\": \"ahmed@test.com\",\n  \"password\": \"Test@123456\",\n  \"companyName\": \"Test Company LLC\",\n  \"countryCode\": \"AE\",\n  \"trn\": \"100123456789012\",\n  \"phone\": \"+971501234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmed@test.com\",\n  \"password\": \"Test@123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmed@test.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ahmed@test.com\",\n  \"token\": \"reset_token\",\n  \"newPassword\": \"NewPass@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Test@123456\",\n  \"newPassword\": \"NewPass@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@test.com\",\n  \"password\": \"Test@123456\",\n  \"role\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["users", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated Name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Restore User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/restore",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{{user_id}}", "restore"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Company\",\n  \"trn\": \"100123456789012\",\n  \"countryCode\": \"AE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Get Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Get Company Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get Companies by Country",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/country/AE",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "country", "AE"]
+            }
+          }
+        },
+        {
+          "name": "Get Company Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}/stats",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Company by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Company Name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Company",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}/deactivate",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}", "deactivate"]
+            }
+          }
+        },
+        {
+          "name": "Activate Company",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}/activate",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}", "activate"]
+            }
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/{{company_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "{{company_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Customer Name\",\n  \"email\": \"customer@test.com\",\n  \"phone\": \"+971501234567\",\n  \"type\": \"individual\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/customers",
+              "host": ["{{base_url}}"],
+              "path": ["customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers",
+              "host": ["{{base_url}}"],
+              "path": ["customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get VAT Registered Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/vat-registered",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "vat-registered"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/stats",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Customers by Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/type/individual",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "type", "individual"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/1",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Customer Name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/customers/1",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/customers/1",
+              "host": ["{{base_url}}"],
+              "path": ["customers", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Product Name\",\n  \"description\": \"Product Description\",\n  \"price\": 100.00,\n  \"vatRate\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["items"]
+            }
+          }
+        },
+        {
+          "name": "Get Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["items"]
+            }
+          }
+        },
+        {
+          "name": "Get Item Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["items", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get AI Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items/ai-suggestions",
+              "host": ["{{base_url}}"],
+              "path": ["items", "ai-suggestions"]
+            }
+          }
+        },
+        {
+          "name": "Get Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"price\": 120.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Create Invoice",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": 1,\n  \"items\": [\n    {\n      \"itemId\": 1,\n      \"quantity\": 2,\n      \"price\": 100.00\n    }\n  ],\n  \"dueDate\": \"2024-01-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/invoices",
+              "host": ["{{base_url}}"],
+              "path": ["invoices"]
+            }
+          }
+        },
+        {
+          "name": "Get Invoices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices",
+              "host": ["{{base_url}}"],
+              "path": ["invoices"]
+            }
+          }
+        },
+        {
+          "name": "Get Invoice Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Generate Invoice Number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/generate-number",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "generate-number"]
+            }
+          }
+        },
+        {
+          "name": "Get Invoice by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/1",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Invoice",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"sent\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/invoices/1",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "1"]
+            }
+          }
+        },
+        {
+          "name": "Send Invoice",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/1/send",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "1", "send"]
+            }
+          }
+        },
+        {
+          "name": "Mark Invoice as Paid",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoices/1/paid",
+              "host": ["{{base_url}}"],
+              "path": ["invoices", "1", "paid"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Countries",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/countries",
+              "host": ["{{base_url}}"],
+              "path": ["countries"]
+            }
+          }
+        },
+        {
+          "name": "Get Supported Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/countries/supported",
+              "host": ["{{base_url}}"],
+              "path": ["countries", "supported"]
+            }
+          }
+        },
+        {
+          "name": "Get Country by Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/countries/AE",
+              "host": ["{{base_url}}"],
+              "path": ["countries", "AE"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "VAT Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/vat?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "vat"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Profit & Loss Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/profit-loss?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "profit-loss"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Balance Sheet Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/balance-sheet?date=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "balance-sheet"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cash Flow Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/cash-flow?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "cash-flow"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Customer Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/customers",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Dashboard Charts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/dashboard/charts",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "dashboard", "charts"]
+            }
+          }
+        },
+        {
+          "name": "Expenses by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/expenses/by-category",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "expenses", "by-category"]
+            }
+          }
+        },
+        {
+          "name": "Export VAT Report to Excel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/vat/export/excel?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "vat", "export", "excel"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export P&L Report to Excel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/profit-loss/export/excel?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "profit-loss", "export", "excel"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export Balance Sheet to Excel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/balance-sheet/export/excel?date=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "balance-sheet", "export", "excel"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Export Expenses by Category to Excel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/expenses/by-category/export/excel",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "expenses", "by-category", "export", "excel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Revenue Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/revenue-chart",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "revenue-chart"]
+            }
+          }
+        },
+        {
+          "name": "Top Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/top-customers",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "top-customers"]
+            }
+          }
+        },
+        {
+          "name": "Overdue Invoices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/overdue-invoices",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "overdue-invoices"]
+            }
+          }
+        },
+        {
+          "name": "Recent Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/recent-activity",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "recent-activity"]
+            }
+          }
+        },
+        {
+          "name": "VAT Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/vat-summary",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "vat-summary"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Create Expense",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Office Supplies\",\n  \"amount\": 150.00,\n  \"categoryId\": 1,\n  \"date\": \"2024-01-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses",
+              "host": ["{{base_url}}"],
+              "path": ["expenses"]
+            }
+          }
+        },
+        {
+          "name": "Get Expenses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses",
+              "host": ["{{base_url}}"],
+              "path": ["expenses"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Expense",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated Office Supplies\",\n  \"amount\": 175.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Expense",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "1"]
+            }
+          }
+        },
+        {
+          "name": "Expense Summary Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/stats/summary",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "stats", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Expenses by Category Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/stats/by-category",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "stats", "by-category"]
+            }
+          }
+        },
+        {
+          "name": "OCR Scan Receipt",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr/scan",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr", "scan"]
+            }
+          }
+        },
+        {
+          "name": "OCR Batch Scan",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr/batch-scan",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr", "batch-scan"]
+            }
+          }
+        },
+        {
+          "name": "Create Expense Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Travel\",\n  \"description\": \"Travel expenses\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/categories",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/categories",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Expense Category",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Travel\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Expense Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create OCR Record",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileName\": \"receipt.jpg\",\n  \"extractedData\": {\"amount\": 100, \"vendor\": \"Store\"}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr"]
+            }
+          }
+        },
+        {
+          "name": "Get OCR Records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr/list",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr", "list"]
+            }
+          }
+        },
+        {
+          "name": "Get OCR Record by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr", "1"]
+            }
+          }
+        },
+        {
+          "name": "Mark OCR as Processed",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/ocr/1/mark-processed",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "ocr", "1", "mark-processed"]
+            }
+          }
+        },
+        {
+          "name": "Create Expense Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expenseId\": 1,\n  \"amount\": 100.00,\n  \"method\": \"cash\",\n  \"date\": \"2024-01-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/payments",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/payments",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Payment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/payments/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Expense Payment",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 120.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expenses/payments/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Expense Payment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/payments/1",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Payment Summary Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/payments-stats/summary",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments-stats", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Payments by Method Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expenses/payments-stats/by-method",
+              "host": ["{{base_url}}"],
+              "path": ["expenses", "payments-stats", "by-method"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manager\",\n  \"description\": \"Manager role\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/roles",
+              "host": ["{{base_url}}"],
+              "path": ["roles"]
+            }
+          }
+        },
+        {
+          "name": "Get Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/roles",
+              "host": ["{{base_url}}"],
+              "path": ["roles"]
+            }
+          }
+        },
+        {
+          "name": "Get Role by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/roles/1",
+              "host": ["{{base_url}}"],
+              "path": ["roles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Manager\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/roles/1",
+              "host": ["{{base_url}}"],
+              "path": ["roles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/roles/1",
+              "host": ["{{base_url}}"],
+              "path": ["roles", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "item": [
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"read_invoices\",\n  \"description\": \"Read invoices permission\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["permissions"]
+            }
+          }
+        },
+        {
+          "name": "Get Permissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["permissions"]
+            }
+          }
+        },
+        {
+          "name": "Get Permission by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/permissions/1",
+              "host": ["{{base_url}}"],
+              "path": ["permissions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Permission",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated permission\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/permissions/1",
+              "host": ["{{base_url}}"],
+              "path": ["permissions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Permission",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/permissions/1",
+              "host": ["{{base_url}}"],
+              "path": ["permissions", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Role Permissions",
+      "item": [
+        {
+          "name": "Assign Permission to Role",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roleId\": 1,\n  \"permissionId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/role-permissions/assign",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Assign Multiple Permissions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissionIds\": [1, 2, 3]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/role-permissions/assign-multiple/1",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "assign-multiple", "1"]
+            }
+          }
+        },
+        {
+          "name": "Remove Permission from Role",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/role-permissions/1/1",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "1", "1"]
+            }
+          }
+        },
+        {
+          "name": "Remove All Permissions from Role",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/role-permissions/role/1/all",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "role", "1", "all"]
+            }
+          }
+        },
+        {
+          "name": "Get Role Permissions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/role-permissions/role/1",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "role", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Permission Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/role-permissions/permission/1",
+              "host": ["{{base_url}}"],
+              "path": ["role-permissions", "permission", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "File Upload",
+      "item": [
+        {
+          "name": "Upload Company Logo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/file-upload/company-logo/{{company_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["file-upload", "company-logo", "{{company_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PDF",
+      "item": [
+        {
+          "name": "Generate Invoice PDF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pdf/invoice/1",
+              "host": ["{{base_url}}"],
+              "path": ["pdf", "invoice", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Templates",
+      "item": [
+        {
+          "name": "Create Item Template",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Standard Service\",\n  \"description\": \"Standard service template\",\n  \"price\": 100.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/item-templates",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates"]
+            }
+          }
+        },
+        {
+          "name": "Get Item Templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/item-templates",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates"]
+            }
+          }
+        },
+        {
+          "name": "Get Item Template Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/item-templates/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get Item Template by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/item-templates/1",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Item Template",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Template\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/item-templates/1",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates", "1"]
+            }
+          }
+        },
+        {
+          "name": "Use Item Template",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/item-templates/1/use",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates", "1", "use"]
+            }
+          }
+        },
+        {
+          "name": "Delete Item Template",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/item-templates/1",
+              "host": ["{{base_url}}"],
+              "path": ["item-templates", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "VAT Reports",
+      "item": [
+        {
+          "name": "Create VAT Report",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"period\": \"2024-Q1\",\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": \"2024-03-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/vat-reports",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports"]
+            }
+          }
+        },
+        {
+          "name": "Get VAT Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports"]
+            }
+          }
+        },
+        {
+          "name": "Get VAT Report Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get VAT Reports by Period",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports/by-period?period=2024-Q1",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "by-period"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "2024-Q1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get VAT Report by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update VAT Report",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"reviewed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/vat-reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "1"]
+            }
+          }
+        },
+        {
+          "name": "Submit VAT Report",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports/1/submit",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "1", "submit"]
+            }
+          }
+        },
+        {
+          "name": "Delete VAT Report",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vat-reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["vat-reports", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs"]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Log Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", "statistics"]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Logs by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs/by-date-range?startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", "by-date-range"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Logs by User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs/by-user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", "by-user", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Logs by Entity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs/entity/invoice/1",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", "entity", "invoice", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Log by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/audit-logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["audit-logs", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expense Categories",
+      "item": [
+        {
+          "name": "Create Expense Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Office Supplies\",\n  \"description\": \"Office supplies category\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expense-categories",
+              "host": ["{{base_url}}"],
+              "path": ["expense-categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expense-categories",
+              "host": ["{{base_url}}"],
+              "path": ["expense-categories"]
+            }
+          }
+        },
+        {
+          "name": "Get Expense Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expense-categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expense-categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Expense Category",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Category\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/expense-categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expense-categories", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Expense Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/expense-categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["expense-categories", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invoice Settings",
+      "item": [
+        {
+          "name": "Create Invoice Settings",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prefix\": \"INV\",\n  \"nextNumber\": 1001,\n  \"terms\": \"Payment due within 30 days\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/invoice-settings",
+              "host": ["{{base_url}}"],
+              "path": ["invoice-settings"]
+            }
+          }
+        },
+        {
+          "name": "Get Invoice Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/invoice-settings",
+              "host": ["{{base_url}}"],
+              "path": ["invoice-settings"]
+            }
+          }
+        },
+        {
+          "name": "Update Invoice Settings",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nextNumber\": 1002\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/invoice-settings",
+              "host": ["{{base_url}}"],
+              "path": ["invoice-settings"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Onboarding Steps",
+      "item": [
+        {
+          "name": "Create Onboarding Step",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Setup Company\",\n  \"description\": \"Complete company setup\",\n  \"order\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/onboarding-steps",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding-steps"]
+            }
+          }
+        },
+        {
+          "name": "Get Onboarding Steps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/onboarding-steps",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding-steps"]
+            }
+          }
+        },
+        {
+          "name": "Get Onboarding Step by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/onboarding-steps/1",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding-steps", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Onboarding Step",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Step\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/onboarding-steps/1",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding-steps", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Onboarding Step",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/onboarding-steps/1",
+              "host": ["{{base_url}}"],
+              "path": ["onboarding-steps", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Backup Logs",
+      "item": [
+        {
+          "name": "Create Backup Log",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"full\",\n  \"status\": \"completed\",\n  \"size\": 1024000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/backup-logs",
+              "host": ["{{base_url}}"],
+              "path": ["backup-logs"]
+            }
+          }
+        },
+        {
+          "name": "Get Backup Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup-logs",
+              "host": ["{{base_url}}"],
+              "path": ["backup-logs"]
+            }
+          }
+        },
+        {
+          "name": "Get Backup Log by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/backup-logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["backup-logs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Backup Log",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"failed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/backup-logs/1",
+              "host": ["{{base_url}}"],
+              "path": ["backup-logs", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Encryption Keys",
+      "item": [
+        {
+          "name": "Create Encryption Key",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Primary Key\",\n  \"algorithm\": \"AES-256\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/encryption-keys",
+              "host": ["{{base_url}}"],
+              "path": ["encryption-keys"]
+            }
+          }
+        },
+        {
+          "name": "Get Encryption Keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/encryption-keys",
+              "host": ["{{base_url}}"],
+              "path": ["encryption-keys"]
+            }
+          }
+        },
+        {
+          "name": "Update Encryption Key",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/encryption-keys/1",
+              "host": ["{{base_url}}"],
+              "path": ["encryption-keys", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Onboarding Progress",
+      "item": [
+        {
+          "name": "Create User Onboarding Progress",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stepId\": 1,\n  \"completed\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user-onboarding-progress",
+              "host": ["{{base_url}}"],
+              "path": ["user-onboarding-progress"]
+            }
+          }
+        },
+        {
+          "name": "Get User Onboarding Progress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user-onboarding-progress",
+              "host": ["{{base_url}}"],
+              "path": ["user-onboarding-progress"]
+            }
+          }
+        },
+        {
+          "name": "Get Onboarding Percentage",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user-onboarding-progress/percentage",
+              "host": ["{{base_url}}"],
+              "path": ["user-onboarding-progress", "percentage"]
+            }
+          }
+        },
+        {
+          "name": "Update Onboarding Step Progress",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"completed\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user-onboarding-progress/1",
+              "host": ["{{base_url}}"],
+              "path": ["user-onboarding-progress", "1"]
+            }
+          }
+        },
+        {
+          "name": "Complete Onboarding Step",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user-onboarding-progress/1/complete",
+              "host": ["{{base_url}}"],
+              "path": ["user-onboarding-progress", "1", "complete"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

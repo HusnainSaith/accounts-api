@@ -1,0 +1,832 @@
+{
+  "info": {
+    "name": "Hisab API Complete Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:3002"},
+    {"key": "token", "value": ""},
+    {"key": "company_id", "value": ""},
+    {"key": "user_id", "value": ""},
+    {"key": "customer_id", "value": ""},
+    {"key": "item_id", "value": ""},
+    {"key": "invoice_id", "value": ""}
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{"key": "token", "value": "{{token}}"}]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Ali\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@123456\",\n  \"companyName\": \"Test Company LLC\",\n  \"countryCode\": \"AE\",\n  \"trn\": \"100123456789012\",\n  \"phone\": \"+971501234567\"\n}"
+            },
+            "url": "{{base_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["if (pm.response.code === 200) { pm.collectionVariables.set('token', pm.response.json().access_token); }"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@123456\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/profile"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": "{{base_url}}/auth/forgot-password"
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"reset_token_here\",\n  \"password\": \"NewPassword@123\"\n}"
+            },
+            "url": "{{base_url}}/auth/reset-password"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Test@123456\",\n  \"newPassword\": \"NewPassword@123\"\n}"
+            },
+            "url": "{{base_url}}/auth/change-password"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password@123\",\n  \"roleId\": \"role_id_here\"\n}"
+            },
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/statistics"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users/{{user_id}}"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated Name\"\n}"
+            },
+            "url": "{{base_url}}/users/{{user_id}}"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/users/{{user_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Company LLC\",\n  \"trn\": \"100123456789013\",\n  \"countryCode\": \"AE\"\n}"
+            },
+            "url": "{{base_url}}/companies"
+          }
+        },
+        {
+          "name": "Get Companies",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies"
+          }
+        },
+        {
+          "name": "Get Company Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies/statistics"
+          }
+        },
+        {
+          "name": "Get Companies by Country",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies/country/AE"
+          }
+        },
+        {
+          "name": "Get Company Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies/{{company_id}}/stats"
+          }
+        },
+        {
+          "name": "Get Company by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/companies/{{company_id}}"
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+971501234568\"\n}"
+            },
+            "url": "{{base_url}}/companies/{{company_id}}"
+          }
+        },
+        {
+          "name": "Deactivate Company",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/companies/{{company_id}}/deactivate"
+          }
+        },
+        {
+          "name": "Activate Company",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/companies/{{company_id}}/activate"
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/companies/{{company_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Countries",
+      "item": [
+        {
+          "name": "Get Countries",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/countries"
+          }
+        },
+        {
+          "name": "Get Supported Countries",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/countries/supported"
+          }
+        },
+        {
+          "name": "Get Country by Code",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/countries/AE"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerType\": \"business\",\n  \"name\": \"ABC Trading LLC\",\n  \"email\": \"abc@trading.com\",\n  \"phone\": \"+971501234571\",\n  \"trn\": \"100987654321098\",\n  \"isVatRegistered\": true\n}"
+            },
+            "url": "{{base_url}}/customers"
+          }
+        },
+        {
+          "name": "Get Customers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers"
+          }
+        },
+        {
+          "name": "Get Customer Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers/statistics"
+          }
+        },
+        {
+          "name": "Get VAT Registered Customers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers/vat-registered"
+          }
+        },
+        {
+          "name": "Get Customer Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers/stats"
+          }
+        },
+        {
+          "name": "Get Customers by Type",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers/type/business"
+          }
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/customers/{{customer_id}}"
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+971501234572\"\n}"
+            },
+            "url": "{{base_url}}/customers/{{customer_id}}"
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/customers/{{customer_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itemCode\": \"CONS-001\",\n  \"name\": \"Consulting Services\",\n  \"unitPrice\": 500.00,\n  \"currencyCode\": \"AED\",\n  \"defaultVatRate\": 5.00,\n  \"isService\": true\n}"
+            },
+            "url": "{{base_url}}/items"
+          }
+        },
+        {
+          "name": "Get Items",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/items"
+          }
+        },
+        {
+          "name": "Get Item Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/items/statistics"
+          }
+        },
+        {
+          "name": "Get AI Suggestions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/items/ai-suggestions"
+          }
+        },
+        {
+          "name": "Get Item by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/items/{{item_id}}"
+          }
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unitPrice\": 550.00\n}"
+            },
+            "url": "{{base_url}}/items/{{item_id}}"
+          }
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/items/{{item_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Create Invoice",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"{{customer_id}}\",\n  \"invoiceType\": \"full\",\n  \"vatRate\": 5.00,\n  \"currencyCode\": \"AED\",\n  \"items\": [{\n    \"itemId\": \"{{item_id}}\",\n    \"description\": \"Consulting Services\",\n    \"quantity\": 10,\n    \"unitPrice\": 500.00,\n    \"vatRate\": 5.00\n  }]\n}"
+            },
+            "url": "{{base_url}}/invoices"
+          }
+        },
+        {
+          "name": "Get Invoices",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/invoices"
+          }
+        },
+        {
+          "name": "Get Invoice Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/invoices/statistics"
+          }
+        },
+        {
+          "name": "Generate Invoice Number",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/invoices/generate-number"
+          }
+        },
+        {
+          "name": "Get Invoice by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/invoices/{{invoice_id}}"
+          }
+        },
+        {
+          "name": "Update Invoice",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated invoice notes\"\n}"
+            },
+            "url": "{{base_url}}/invoices/{{invoice_id}}"
+          }
+        },
+        {
+          "name": "Send Invoice",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/invoices/{{invoice_id}}/send"
+          }
+        },
+        {
+          "name": "Mark Invoice as Paid",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/invoices/{{invoice_id}}/paid"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "VAT Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/vat?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Profit Loss Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/profit-loss?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Balance Sheet Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/balance-sheet?asOfDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Cash Flow Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/cash-flow?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Customers Report",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/customers"
+          }
+        },
+        {
+          "name": "Dashboard Charts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/dashboard/charts"
+          }
+        },
+        {
+          "name": "Expenses by Category",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/expenses/by-category"
+          }
+        },
+        {
+          "name": "Export VAT Report Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/vat/export/excel?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Export Profit Loss Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/profit-loss/export/excel?startDate=2024-01-01&endDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Export Balance Sheet Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/balance-sheet/export/excel?asOfDate=2024-01-31"
+          }
+        },
+        {
+          "name": "Export Expenses by Category Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/expenses/by-category/export/excel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/stats"
+          }
+        },
+        {
+          "name": "Revenue Chart",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/revenue-chart"
+          }
+        },
+        {
+          "name": "Top Customers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/top-customers"
+          }
+        },
+        {
+          "name": "Overdue Invoices",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/overdue-invoices"
+          }
+        },
+        {
+          "name": "Recent Activity",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/recent-activity"
+          }
+        },
+        {
+          "name": "VAT Summary",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/dashboard/vat-summary"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manager\",\n  \"description\": \"Manager role\"\n}"
+            },
+            "url": "{{base_url}}/roles"
+          }
+        },
+        {
+          "name": "Get Roles",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/roles"
+          }
+        },
+        {
+          "name": "Get Role by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/roles/role_id"
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": "{{base_url}}/roles/role_id"
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/roles/role_id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "item": [
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"create_invoice\",\n  \"description\": \"Create invoice permission\"\n}"
+            },
+            "url": "{{base_url}}/permissions"
+          }
+        },
+        {
+          "name": "Get Permissions",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/permissions"
+          }
+        },
+        {
+          "name": "Get Permission by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/permissions/permission_id"
+          }
+        },
+        {
+          "name": "Update Permission",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": "{{base_url}}/permissions/permission_id"
+          }
+        },
+        {
+          "name": "Delete Permission",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/permissions/permission_id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Create Expense",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryId\": \"category_id\",\n  \"vendorEn\": \"Dubai Properties\",\n  \"amount\": 15000.00,\n  \"currency\": \"AED\",\n  \"taxable\": true,\n  \"vatRate\": 5.00\n}"
+            },
+            "url": "{{base_url}}/expenses"
+          }
+        },
+        {
+          "name": "Get Expenses",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expenses"
+          }
+        },
+        {
+          "name": "Get Expense by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expenses/expense_id"
+          }
+        },
+        {
+          "name": "Update Expense",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 16000.00\n}"
+            },
+            "url": "{{base_url}}/expenses/expense_id"
+          }
+        },
+        {
+          "name": "Delete Expense",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/expenses/expense_id"
+          }
+        },
+        {
+          "name": "Expense Summary Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expenses/stats/summary"
+          }
+        },
+        {
+          "name": "Expenses by Category Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expenses/stats/by-category"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expense Categories",
+      "item": [
+        {
+          "name": "Create Expense Category",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nameEn\": \"Office Rent\",\n  \"nameAr\": \"إيجار المكتب\",\n  \"code\": \"RENT-001\"\n}"
+            },
+            "url": "{{base_url}}/expense-categories"
+          }
+        },
+        {
+          "name": "Get Expense Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expense-categories"
+          }
+        },
+        {
+          "name": "Get Expense Category by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/expense-categories/category_id"
+          }
+        },
+        {
+          "name": "Update Expense Category",
+          "request": {
+            "method": "PATCH",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nameEn\": \"Updated Office Rent\"\n}"
+            },
+            "url": "{{base_url}}/expense-categories/category_id"
+          }
+        },
+        {
+          "name": "Delete Expense Category",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/expense-categories/category_id"
+          }
+        }
+      ]
+    }
+  ]
+}

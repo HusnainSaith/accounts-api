@@ -7,15 +7,19 @@ export class UpdateItemDto {
 
   @IsOptional()
   @IsString()
-  name?: string;
+  nameEn?: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  nameAr?: string;
 
   @IsOptional()
   @IsString()
-  category?: string;
+  descriptionEn?: string;
+
+  @IsOptional()
+  @IsString()
+  descriptionAr?: string;
 
   @IsOptional()
   @IsNumber()

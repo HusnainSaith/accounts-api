@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from './config/database.config';
@@ -23,10 +23,17 @@ import { CountriesModule } from './modules/countries/countries.module';
 import { QrCodeModule } from './modules/qr-code/qr-code.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { PdfModule } from './modules/pdf/pdf.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { InvoiceSettingsModule } from './modules/invoice-settings/invoice-settings.module';
+import { OnboardingStepsModule } from './modules/onboarding-steps/onboarding-steps.module';
+import { BackupLogsModule } from './modules/backup-logs/backup-logs.module';
+import { EncryptionKeysModule } from './modules/encryption-keys/encryption-keys.module';
+import { UserOnboardingProgressModule } from './modules/user-onboarding-progress/user-onboarding-progress.module';
 
 // Common Services
 import { RLSService } from './common/services/rls.service';
 import { EncryptionService } from './common/services/encryption.service';
+import { RLSMiddleware } from './common/middleware/rls.middleware';
 
 @Module({
   imports: [
@@ -58,7 +65,20 @@ import { EncryptionService } from './common/services/encryption.service';
     RolePermissionsModule,
     CountriesModule,
     QrCodeModule,
+    ExpensesModule,
+    InvoiceSettingsModule,
+    OnboardingStepsModule,
+    BackupLogsModule,
+    EncryptionKeysModule,
+    UserOnboardingProgressModule,
   ],
-  providers: [RLSService, EncryptionService],
+  providers: [RLSService, EncryptionService, RLSMiddleware],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Apply RLS middleware globally so that for each request we attempt to set
+    // `app.current_tenant` from the authenticated user's companyId.
+    // Note: auth middleware/guard must run earlier so `req.user` is available.
+    consumer.apply(RLSMiddleware).forRoutes('*');
+  }
+}

@@ -8,7 +8,7 @@ async function bootstrap() {
 
   // Enable CORS for frontend
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://your-frontend-domain.com'],
+    origin: ['http://localhost:3001', 'https://your-frontend-domain.com'],
     credentials: true,
   });
 
@@ -26,7 +26,7 @@ async function bootstrap() {
 
   // API documentation removed
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3000;
   await app.listen(port);
 
   console.log(`🚀 Hisab Accounting API running on port ${port}`);

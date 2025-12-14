@@ -38,11 +38,3 @@ export class RegisterDto {
   @IsIn(['AE', 'SA', 'EG'])
   countryCode: string;
 }
-
-export class LoginDto {
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  password: string;
-}

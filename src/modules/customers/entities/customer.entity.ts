@@ -21,6 +21,9 @@ export class Customer {
   @Column({ length: 255 })
   name: string;
 
+  @Column({ name: 'name_ar', length: 255, nullable: true })
+  nameAr: string;
+
   @Column({ length: 255, nullable: true })
   email: string;
 
@@ -32,6 +35,15 @@ export class Customer {
 
   @Column({ type: 'text', nullable: true })
   address: string;
+
+  @Column({ name: 'address_en', type: 'text', nullable: true })
+  addressEn: string;
+
+  @Column({ name: 'address_ar', type: 'text', nullable: true })
+  addressAr: string;
+
+  @Column({ name: 'default_currency', length: 3, nullable: true })
+  defaultCurrency: string;
 
   @Column({ length: 255, nullable: true })
   city: string;

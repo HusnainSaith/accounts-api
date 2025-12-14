@@ -45,11 +45,11 @@ export class User {
   @Column({ length: 50, nullable: true })
   phone: string;
 
-  @Column({ 
-    name: 'preferred_language', 
-    type: 'enum', 
-    enum: UserLanguage, 
-    default: UserLanguage.EN 
+  @Column({
+    name: 'preferred_language',
+    type: 'enum',
+    enum: UserLanguage,
+    default: UserLanguage.EN,
   })
   preferredLanguage: UserLanguage;
 
@@ -65,14 +65,7 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ name: 'role_id', nullable: true })
-  roleId: string;
-
   @ManyToOne('Company', 'users')
   @JoinColumn({ name: 'company_id' })
   company: unknown;
-
-  @ManyToOne('Role', { nullable: true })
-  @JoinColumn({ name: 'role_id' })
-  roleEntity: unknown;
 }

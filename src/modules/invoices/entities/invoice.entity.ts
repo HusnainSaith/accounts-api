@@ -31,6 +31,9 @@ export class Invoice {
   @Column({ name: 'invoice_number', length: 100 })
   invoiceNumber: string;
 
+  @Column({ name: 'invoice_sequence', type: 'bigint', nullable: true })
+  invoiceSequence: number;
+
   @Column({ name: 'invoice_type', type: 'enum', enum: InvoiceType })
   invoiceType: InvoiceType;
 
@@ -68,6 +71,18 @@ export class Invoice {
 
   @Column({ type: 'text', nullable: true })
   notes: string;
+
+  @Column({ name: 'notes_ar', type: 'text', nullable: true })
+  notesAr: string;
+
+  @Column({ name: 'seller_trn', length: 64, nullable: true })
+  sellerTrn: string;
+
+  @Column({ name: 'buyer_trn', length: 64, nullable: true })
+  buyerTrn: string;
+
+  @Column({ name: 'vat_rate_used', type: 'decimal', precision: 5, scale: 2, nullable: true })
+  vatRateUsed: number;
 
   @Column({ name: 'payment_method', length: 255, nullable: true })
   paymentMethod: string;

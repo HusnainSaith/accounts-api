@@ -1,9 +1,13 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UsersService } from '../../users/services/users.service';
 import { CompaniesService } from '../../companies/services/companies.service';
-import { LoginDto, RegisterDto } from '../dto/register.dto';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
 import { UserRole } from '../../users/entities/user.entity';
+import { BlacklistedToken } from '../entities/blacklisted-token.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 
@@ -13,13 +17,24 @@ export class AuthService {
     private usersService: UsersService,
     private companiesService: CompaniesService,
     private jwtService: JwtService,
+    @InjectRepository(BlacklistedToken)
+    private blacklistedTokenRepository: Repository<BlacklistedToken>,
   ) {}
 
   async login(loginDto: LoginDto) {
     const user = await this.usersService.findByEmail(loginDto.email);
     
-    if (!user || !await bcrypt.compare(loginDto.password, user.passwordHash)) {
-      throw new UnauthorizedException('Invalid credentials');
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const passwordMatch = await bcrypt.compare(loginDto.password, user.passwordHash);
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Password incorrect');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User account has been deleted');
     }
 
     // Update last login
@@ -146,12 +161,27 @@ export class AuthService {
     return { message: 'Password changed successfully' };
   }
 
-  async logout(token: string): Promise<{ message: string }> {
+  async logout(token: string, userId: string): Promise<{ message: string }> {
+    try {
+      const decoded = this.jwtService.decode(token) as any;
+      if (decoded?.jti) {
+        await this.blacklistedTokenRepository.save({
+          tokenJti: decoded.jti,
+          userId: userId,
+          expiresAt: new Date(decoded.exp * 1000)
+        });
+      }
+    } catch (error) {
+      // Token might be invalid, but still return success
+    }
     return { message: 'Logged out successfully' };
   }
 
   async isTokenBlacklisted(jti: string): Promise<boolean> {
-    return false;
+    const blacklistedToken = await this.blacklistedTokenRepository.findOne({
+      where: { tokenJti: jti }
+    });
+    return !!blacklistedToken;
   }
 
   async validateUser(payload: { sub: string; email: string; jti?: string }) {
@@ -160,9 +190,19 @@ export class AuthService {
       throw new UnauthorizedException('Token has been revoked');
     }
     try {
-      return await this.usersService.findOne(payload.sub);
+      const user = await this.usersService.findOne(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      if (!user.isActive) {
+        throw new UnauthorizedException('User account has been deleted');
+      }
+      return user;
     } catch (error) {
-      return null;
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }

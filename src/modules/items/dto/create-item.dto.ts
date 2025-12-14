@@ -1,4 +1,11 @@
-import { IsString, IsNumber, IsBoolean, IsOptional, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsOptional,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class CreateItemDto {
   @IsOptional()
@@ -7,19 +14,23 @@ export class CreateItemDto {
 
   @IsNotEmpty()
   @IsString()
-  name: string;
+  nameEn: string; // Changed from 'name'
 
   @IsOptional()
   @IsString()
-  description?: string;
+  nameAr?: string;
 
   @IsOptional()
   @IsString()
-  category?: string;
+  descriptionEn?: string; // Changed from 'description'
+
+  @IsOptional()
+  @IsString()
+  descriptionAr?: string;
 
   @IsNotEmpty()
   @IsNumber()
-  unitPrice: number;
+  unitPrice: number; // This should match your 'price' field
 
   @IsNotEmpty()
   @IsString()
@@ -27,7 +38,7 @@ export class CreateItemDto {
 
   @IsOptional()
   @IsNumber()
-  defaultVatRate?: number;
+  defaultVatRate?: number; // This should match your 'vatRate' field
 
   @IsOptional()
   @IsBoolean()
@@ -39,5 +50,6 @@ export class CreateItemDto {
 
   @IsOptional()
   @IsBoolean()
-  aiSuggested?: boolean;
+  @Transform(({ value }): boolean => value ?? true)
+  aiSuggested: boolean = true;
 }

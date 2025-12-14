@@ -1,1 +1,1 @@
-export { DashboardStatsDto, RevenueChartDto } from './dashboard.dto';
+export * from './dashboard.dto';

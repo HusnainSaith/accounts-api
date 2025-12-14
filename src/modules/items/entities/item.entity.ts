@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 
 @Entity('items')
@@ -12,11 +20,23 @@ export class Item {
   @Column({ name: 'item_code', length: 100, nullable: true })
   itemCode: string;
 
-  @Column({ length: 255 })
-  name: string;
+  // @Column({ length: 255 })
+  // name: string;
 
-  @Column({ type: 'text', nullable: true })
-  description: string;
+  @Column({ name: 'name_en', length: 255, nullable: true })
+  nameEn: string;
+
+  @Column({ name: 'name_ar', length: 255, nullable: true })
+  nameAr: string;
+
+  // @Column({ type: 'text', nullable: true })
+  // description: string;
+
+  @Column({ name: 'description_en', type: 'text', nullable: true })
+  descriptionEn: string;
+
+  @Column({ name: 'description_ar', type: 'text', nullable: true })
+  descriptionAr: string;
 
   @Column({ length: 255, nullable: true })
   category: string;
@@ -27,8 +47,23 @@ export class Item {
   @Column({ name: 'currency_code', length: 3 })
   currencyCode: string;
 
-  @Column({ name: 'default_vat_rate', type: 'decimal', precision: 5, scale: 2, nullable: true })
+  @Column({
+    name: 'default_vat_rate',
+    type: 'decimal',
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
   defaultVatRate: number;
+
+  @Column({
+    name: 'vat_rate',
+    type: 'decimal',
+    precision: 5,
+    scale: 2,
+    nullable: true,
+  })
+  vatRate: number;
 
   @Column({ name: 'is_service', default: true })
   isService: boolean;
@@ -45,7 +80,7 @@ export class Item {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Company, company => company.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Company, (company) => company.items, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company: Company;
 }

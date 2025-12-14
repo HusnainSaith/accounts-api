@@ -20,16 +20,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     role: string;
     jti?: string;
   }) {
+    console.log('JWT Strategy - Payload:', payload);
     const user = await this.authService.validateUser(payload);
+    console.log('JWT Strategy - User found:', !!user);
     if (!user) {
+      console.log('JWT Strategy - User validation failed');
       return null;
     }
-    return {
+    const result = {
       id: user.id,
       email: user.email,
       companyId: payload.companyId,
       role: payload.role,
       roles: [payload.role], // Convert single role to array
     };
+    console.log('JWT Strategy - Returning user:', result);
+    return result;
   }
 }

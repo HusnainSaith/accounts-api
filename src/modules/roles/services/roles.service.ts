@@ -13,12 +13,12 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto): Promise<Role> {
     const role = this.rolesRepository.create(createRoleDto);
-    return this.rolesRepository.save(role);
+    return await this.rolesRepository.save(role);
   }
 
   async findAll(): Promise<Role[]> {
     return this.rolesRepository.find({
-      relations: ['permissions'],
+      relations: ['rolePermissions'],
       order: { createdAt: 'ASC' }
     });
   }
@@ -26,14 +26,14 @@ export class RolesService {
   async findOne(id: string): Promise<Role | null> {
     return this.rolesRepository.findOne({ 
       where: { id },
-      relations: ['permissions']
+      relations: ['rolePermissions']
     });
   }
 
-  async findByName(roleName: string): Promise<Role | null> {
+  async findByName(name: string): Promise<Role | null> {
     return this.rolesRepository.findOne({ 
-      where: { roleName },
-      relations: ['permissions']
+      where: { name },
+      relations: ['rolePermissions']
     });
   }
 
@@ -49,21 +49,24 @@ export class RolesService {
   async seedDefaultRoles(): Promise<void> {
     const defaultRoles = [
       {
-        roleName: 'Owner',
-        description: 'Company owner with full access'
+        code: 'OWNER',
+        name: 'Owner',
+        isSystem: true
       },
       {
-        roleName: 'Staff',
-        description: 'Staff member with limited access'
+        code: 'STAFF',
+        name: 'Staff',
+        isSystem: true
       },
       {
-        roleName: 'Accountant',
-        description: 'Accountant with financial access'
+        code: 'ACCOUNTANT',
+        name: 'Accountant',
+        isSystem: true
       }
     ];
 
     for (const roleData of defaultRoles) {
-      const existing = await this.findByName(roleData.roleName);
+      const existing = await this.findByName(roleData.name);
       if (!existing) {
         await this.create(roleData);
       }

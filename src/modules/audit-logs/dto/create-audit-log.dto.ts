@@ -1,34 +1,34 @@
-import { IsString, IsUUID, IsOptional, IsIn, IsObject } from 'class-validator';
-import { AuditAction } from '../entities/audit-log.entity';
+import { IsString, IsUUID, IsOptional, IsObject } from 'class-validator';
 
 export class CreateAuditLogDto {
-  @IsOptional()
   @IsUUID()
-  companyId?: string;
+  companyId: string;
 
   @IsOptional()
   @IsUUID()
-  userId?: string;
+  actorUserId?: string;
 
   @IsString()
-  entityType: string;
+  action: string;
 
+  @IsString()
+  entity: string;
+
+  @IsOptional()
   @IsUUID()
-  entityId: string;
-
-  @IsIn([AuditAction.CREATE, AuditAction.UPDATE, AuditAction.DELETE, AuditAction.SEND, AuditAction.PAY])
-  action: AuditAction;
+  entityId?: string;
 
   @IsOptional()
   @IsObject()
-  oldValues?: Record<string, unknown>;
+  before?: Record<string, unknown>;
 
+  @IsOptional()
   @IsObject()
-  newValues: Record<string, unknown>;
+  after?: Record<string, unknown>;
 
   @IsOptional()
   @IsString()
-  ipAddress?: string;
+  ip?: string;
 
   @IsOptional()
   @IsString()

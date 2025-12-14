@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+<<<<<<< HEAD
 import { Repository } from 'typeorm';
 import { UsersService } from '../../users/services/users.service';
 import { CompaniesService } from '../../companies/services/companies.service';
@@ -8,6 +9,14 @@ import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { UserRole } from '../../users/entities/user.entity';
 import { BlacklistedToken } from '../entities/blacklisted-token.entity';
+=======
+import { Repository, DataSource } from 'typeorm';
+import { UsersService } from '../../users/services/users.service';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { BlacklistedToken } from '../entities/blacklisted-token.entity';
+import { RegistrationBootstrapService } from './registration-bootstrap.service';
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 
@@ -15,8 +24,12 @@ import * as crypto from 'crypto';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private companiesService: CompaniesService,
     private jwtService: JwtService,
+<<<<<<< HEAD
+=======
+    private dataSource: DataSource,
+    private bootstrapService: RegistrationBootstrapService,
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     @InjectRepository(BlacklistedToken)
     private blacklistedTokenRepository: Repository<BlacklistedToken>,
   ) {}
@@ -44,9 +57,7 @@ export class AuthService {
     const payload = { 
       sub: user.id, 
       email: user.email,
-      companyId: user.companyId,
-      role: user.role,
-      preferredLanguage: user.preferredLanguage,
+
       jti
     };
 
@@ -54,77 +65,36 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        companyId: user.companyId,
-        preferredLanguage: user.preferredLanguage
+        fullName: user.fullName,
+        email: user.email
       }
     };
   }
 
   async register(registerDto: RegisterDto) {
     // Check if email already exists
-    const existingUser = await this.usersService.findByEmail(registerDto.email);
-    if (existingUser) {
+    const existingUser = await this.dataSource.query(
+      'SELECT id FROM users WHERE email = $1',
+      [registerDto.email]
+    );
+    
+    if (existingUser.length > 0) {
       throw new ConflictException('Email already exists');
     }
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
     
-    // Get country config for VAT rate and currency
-    const countryConfig = this.getCountryConfig(registerDto.countryCode);
-    
-    // Create company first
-    const company = await this.companiesService.create({
-      name: registerDto.companyName,
-      countryCode: registerDto.countryCode,
-      currencyCode: countryConfig.currencyCode,
-      vatRate: countryConfig.defaultVatRate,
-      trn: registerDto.trn,
-      phone: registerDto.phone,
-      isActive: true,
-      isTestAccount: false
-    });
-
-    // Create user
-    const user = await this.usersService.create({
-      companyId: company.id,
-      firstName: registerDto.firstName,
-      lastName: registerDto.lastName,
-      email: registerDto.email,
-      password: registerDto.password,
-      role: UserRole.OWNER,
-      phone: registerDto.phone
-    });
+    // Bootstrap complete user environment
+    const result = await this.bootstrapService.bootstrapUserEnvironment(registerDto, hashedPassword);
 
     return {
-      message: 'Registration successful',
-      user: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role
-      },
-      company: {
-        id: company.id,
-        name: company.name,
-        countryCode: company.countryCode,
-        currencyCode: company.currencyCode
-      }
+      message: 'Registration successful - Your accounting environment is ready!',
+      user: result.user,
+      company: result.company
     };
   }
 
-  private getCountryConfig(countryCode: string) {
-    const configs = {
-      AE: { currencyCode: 'AED', defaultVatRate: 5.00 },
-      SA: { currencyCode: 'SAR', defaultVatRate: 15.00 },
-      EG: { currencyCode: 'EGP', defaultVatRate: 14.00 }
-    };
-    return configs[countryCode] || configs.AE;
-  }
+
 
   async forgotPassword(email: string): Promise<{ message: string }> {
     const user = await this.usersService.findByEmail(email);

@@ -3,9 +3,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './services/auth.service';
+import { RegistrationBootstrapService } from './services/registration-bootstrap.service';
 import { AuthController } from './controllers/auth.controller';
 import { UsersModule } from '../users/users.module';
-import { CompaniesModule } from '../companies/companies.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { BlacklistedToken } from './entities/blacklisted-token.entity';
 
@@ -13,7 +13,6 @@ import { BlacklistedToken } from './entities/blacklisted-token.entity';
   imports: [
     TypeOrmModule.forFeature([BlacklistedToken]),
     UsersModule,
-    CompaniesModule,
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your-secret-key',
@@ -21,7 +20,7 @@ import { BlacklistedToken } from './entities/blacklisted-token.entity';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, RegistrationBootstrapService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

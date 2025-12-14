@@ -16,49 +16,49 @@ export class InvoicesController {
 
   @Post()
   @Roles('owner', 'staff', 'accountant')
-  create(@Body() createInvoiceDto: CreateInvoiceDto, @CompanyContext() companyId: string, @Request() req: { user: { id: string } }) {
-    return this.invoicesService.create(createInvoiceDto, companyId, req.user.id);
+  create(@Body() createInvoiceDto: CreateInvoiceDto, @Request() req: { user: { id: string } }) {
+    return this.invoicesService.create(createInvoiceDto, req.user.id);
   }
 
   @Get()
   @Roles('owner', 'staff', 'accountant')
-  findAll(@CompanyContext() companyId: string, @Query('status') status?: string) {
-    return this.invoicesService.findAll(companyId, status);
+  findAll(@Query('status') status?: string) {
+    return this.invoicesService.findAll(status);
   }
 
   @Get('statistics')
   @Roles('owner', 'staff', 'accountant')
-  getStatistics(@CompanyContext() companyId: string) {
-    return this.invoicesService.getStatistics(companyId);
+  getStatistics() {
+    return this.invoicesService.getStatistics();
   }
 
   @Get('generate-number')
   @Roles('owner', 'staff', 'accountant')
-  generateInvoiceNumber(@CompanyContext() companyId: string) {
-    return this.invoicesService.generateInvoiceNumber(companyId);
+  generateInvoiceNumber() {
+    return this.invoicesService.generateInvoiceNumber();
   }
 
   @Get(':id')
   @Roles('owner', 'staff', 'accountant')
-  findOne(@Param('id') id: string, @CompanyContext() companyId: string) {
-    return this.invoicesService.findOne(id, companyId);
+  findOne(@Param('id') id: string) {
+    return this.invoicesService.findOne(id);
   }
 
   @Patch(':id')
   @Roles('owner', 'staff', 'accountant')
-  update(@Param('id') id: string, @Body() updateInvoiceDto: UpdateInvoiceDto, @CompanyContext() companyId: string) {
-    return this.invoicesService.update(id, updateInvoiceDto, companyId);
+  update(@Param('id') id: string, @Body() updateInvoiceDto: UpdateInvoiceDto) {
+    return this.invoicesService.update(id, updateInvoiceDto);
   }
 
   @Patch(':id/send')
   @Roles('owner', 'staff')
-  markAsSent(@Param('id') id: string, @CompanyContext() companyId: string) {
-    return this.invoicesService.markAsSent(id, companyId);
+  markAsSent(@Param('id') id: string) {
+    return this.invoicesService.markAsSent(id);
   }
 
   @Patch(':id/paid')
   @Roles('owner', 'staff', 'accountant')
-  markAsPaid(@Param('id') id: string, @CompanyContext() companyId: string) {
-    return this.invoicesService.markAsPaid(id, companyId);
+  markAsPaid(@Param('id') id: string) {
+    return this.invoicesService.markAsPaid(id);
   }
 }

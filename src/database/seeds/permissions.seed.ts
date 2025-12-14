@@ -1,100 +1,80 @@
 import { DataSource } from 'typeorm';
-import { Permission } from '../../modules/permissions/entities/permission.entity';
-import { Role } from '../../modules/roles/entities/role.entity';
 
 export class PermissionsSeed {
-  public async run(dataSource: DataSource): Promise<void> {
-    const permissionRepository = dataSource.getRepository(Permission);
-    const roleRepository = dataSource.getRepository(Role);
+  async run(dataSource: DataSource): Promise<void> {
+    const queryRunner = dataSource.createQueryRunner();
+    
+    try {
+      const permissions = [
+        // User Management
+        { code: 'users.create', description: 'Create users' },
+        { code: 'users.read', description: 'View users' },
+        { code: 'users.update', description: 'Update users' },
+        { code: 'users.delete', description: 'Delete users' },
+        
+        // Role Management
+        { code: 'roles.create', description: 'Create roles' },
+        { code: 'roles.read', description: 'View roles' },
+        { code: 'roles.update', description: 'Update roles' },
+        { code: 'roles.delete', description: 'Delete roles' },
+        
+        // Permission Management
+        { code: 'permissions.create', description: 'Create permissions' },
+        { code: 'permissions.read', description: 'View permissions' },
+        { code: 'permissions.update', description: 'Update permissions' },
+        { code: 'permissions.delete', description: 'Delete permissions' },
+        
+        // Company Management
+        { code: 'companies.create', description: 'Create companies' },
+        { code: 'companies.read', description: 'View companies' },
+        { code: 'companies.update', description: 'Update companies' },
+        { code: 'companies.delete', description: 'Delete companies' },
+        
+        // Account Management
+        { code: 'accounts.create', description: 'Create accounts' },
+        { code: 'accounts.read', description: 'View accounts' },
+        { code: 'accounts.update', description: 'Update accounts' },
+        { code: 'accounts.delete', description: 'Delete accounts' },
+        
+        // Invoice Management
+        { code: 'invoices.create', description: 'Create invoices' },
+        { code: 'invoices.read', description: 'View invoices' },
+        { code: 'invoices.update', description: 'Update invoices' },
+        { code: 'invoices.delete', description: 'Delete invoices' },
+        
+        // Reports
+        { code: 'reports.view', description: 'View reports' },
+        { code: 'reports.export', description: 'Export reports' },
+        
+        // Audit Logs
+        { code: 'audit.read', description: 'View audit logs' },
+        
+        // System Administration
+        { code: 'system.settings', description: 'Manage system settings' },
+        { code: 'fiscal.close', description: 'Close fiscal periods' },
+        { code: 'vouchers.approve', description: 'Approve vouchers' },
+        { code: 'vouchers.post', description: 'Post vouchers' },
+        { code: 'vouchers.reverse', description: 'Reverse vouchers' }
+      ];
 
-    // Define all permissions
-    const permissions = [
-      // User Management
-      { permissionName: 'users.create', description: 'Create users' },
-      { permissionName: 'users.read', description: 'View users' },
-      { permissionName: 'users.update', description: 'Update users' },
-      { permissionName: 'users.delete', description: 'Delete users' },
-      
-      // Company Management
-      { permissionName: 'companies.create', description: 'Create companies' },
-      { permissionName: 'companies.read', description: 'View companies' },
-      { permissionName: 'companies.update', description: 'Update companies' },
-      { permissionName: 'companies.delete', description: 'Delete companies' },
-      
-      // Customer Management
-      { permissionName: 'customers.create', description: 'Create customers' },
-      { permissionName: 'customers.read', description: 'View customers' },
-      { permissionName: 'customers.update', description: 'Update customers' },
-      { permissionName: 'customers.delete', description: 'Delete customers' },
-      
-      // Invoice Management
-      { permissionName: 'invoices.create', description: 'Create invoices' },
-      { permissionName: 'invoices.read', description: 'View invoices' },
-      { permissionName: 'invoices.update', description: 'Update invoices' },
-      { permissionName: 'invoices.delete', description: 'Delete invoices' },
-      { permissionName: 'invoices.send', description: 'Send invoices' },
-      
-      // Item Management
-      { permissionName: 'items.create', description: 'Create items' },
-      { permissionName: 'items.read', description: 'View items' },
-      { permissionName: 'items.update', description: 'Update items' },
-      { permissionName: 'items.delete', description: 'Delete items' },
-      
-      // Reports
-      { permissionName: 'reports.view', description: 'View reports' },
-      { permissionName: 'reports.export', description: 'Export reports' },
-      
-      // Dashboard
-      { permissionName: 'dashboard.view', description: 'View dashboard' },
-      
-      // Role Management
-      { permissionName: 'roles.create', description: 'Create roles' },
-      { permissionName: 'roles.read', description: 'View roles' },
-      { permissionName: 'roles.update', description: 'Update roles' },
-      { permissionName: 'roles.delete', description: 'Delete roles' },
-      
-      // Permission Management
-      { permissionName: 'permissions.read', description: 'View permissions' },
-      { permissionName: 'permissions.assign', description: 'Assign permissions' }
-    ];
-
-    // Create permissions
-    const createdPermissions: Permission[] = [];
-    for (const permissionData of permissions) {
-      let permission = await permissionRepository.findOne({
-        where: { permissionName: permissionData.permissionName }
-      });
-      
-      if (!permission) {
-        permission = permissionRepository.create(permissionData);
-        await permissionRepository.save(permission);
+      for (const permission of permissions) {
+        const existing = await queryRunner.query(
+          `SELECT id FROM permissions WHERE code = $1`,
+          [permission.code]
+        );
+        
+        if (existing.length === 0) {
+          await queryRunner.query(
+            `INSERT INTO permissions (code, description) VALUES ($1, $2)`,
+            [permission.code, permission.description]
+          );
+        }
       }
-      createdPermissions.push(permission);
+      
+      console.log('✅ Permissions seeded successfully');
+    } catch (error) {
+      console.error('❌ Error seeding permissions:', error);
+      throw error;
     }
-
-    // Find or create Owner role
-    let ownerRole = await roleRepository.findOne({
-      where: { roleName: 'Owner' },
-      relations: ['permissions']
-    });
-
-    if (!ownerRole) {
-      ownerRole = roleRepository.create({
-        roleName: 'Owner',
-        description: 'Company owner with full access'
-      });
-      await roleRepository.save(ownerRole);
-    }
-
-    // Assign all permissions to Owner role
-    await roleRepository
-      .createQueryBuilder()
-      .relation(Role, 'permissions')
-      .of(ownerRole)
-      .addAndRemove(createdPermissions, ownerRole.permissions || []);
-
-    console.log('✅ Permissions seeded successfully');
-    console.log(`📝 Created ${permissions.length} permissions`);
-    console.log('👑 Assigned all permissions to Owner role');
   }
 }

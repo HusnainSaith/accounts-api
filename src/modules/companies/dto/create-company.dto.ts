@@ -7,6 +7,10 @@ import {
   MinLength,
   IsNumber,
 } from 'class-validator';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 export class CreateCompanyDto {
   @IsString()
   @MinLength(2)

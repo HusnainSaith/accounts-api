@@ -1,6 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Company } from '../../companies/entities/company.entity';
-import { User } from '../../users/entities/user.entity';
 
 export enum AuditAction {
   CREATE = 'create',
@@ -15,29 +13,29 @@ export class AuditLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'company_id', nullable: true })
+  @Column({ name: 'company_id' })
   companyId: string;
 
-  @Column({ name: 'user_id', nullable: true })
-  userId: string;
+  @Column({ name: 'actor_user_id', nullable: true })
+  actorUserId: string;
 
-  @Column({ name: 'entity_type', length: 100 })
-  entityType: string;
+  @Column({ length: 120 })
+  action: string;
 
-  @Column({ name: 'entity_id' })
+  @Column({ length: 60 })
+  entity: string;
+
+  @Column({ name: 'entity_id', nullable: true })
   entityId: string;
 
-  @Column({ type: 'enum', enum: AuditAction })
-  action: AuditAction;
+  @Column({ type: 'jsonb', nullable: true })
+  before: Record<string, unknown>;
 
-  @Column({ name: 'old_values', type: 'jsonb', nullable: true })
-  oldValues: Record<string, unknown>;
+  @Column({ type: 'jsonb', nullable: true })
+  after: Record<string, unknown>;
 
-  @Column({ name: 'new_values', type: 'jsonb' })
-  newValues: Record<string, unknown>;
-
-  @Column({ name: 'ip_address', length: 100, nullable: true })
-  ipAddress: string;
+  @Column({ length: 64, nullable: true })
+  ip: string;
 
   @Column({ name: 'user_agent', type: 'text', nullable: true })
   userAgent: string;
@@ -45,11 +43,11 @@ export class AuditLog {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @ManyToOne(() => Company, { onDelete: 'CASCADE', nullable: true })
+  @ManyToOne('Company')
   @JoinColumn({ name: 'company_id' })
-  company: Company;
+  company: unknown;
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @ManyToOne('User', 'auditLogs')
+  @JoinColumn({ name: 'actor_user_id' })
+  actorUser: unknown;
 }

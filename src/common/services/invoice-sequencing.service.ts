@@ -1,13 +1,20 @@
 import { Injectable } from '@nestjs/common';
+<<<<<<< HEAD
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { CompanyCounter } from '../../modules/expenses/entities/expense.entity';
+=======
+import { DataSource } from 'typeorm';
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
 @Injectable()
 export class InvoiceSequencingService {
   constructor(
+<<<<<<< HEAD
     @InjectRepository(CompanyCounter)
     private counterRepository: Repository<CompanyCounter>,
+=======
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     private dataSource: DataSource,
   ) {}
 
@@ -51,6 +58,7 @@ export class InvoiceSequencingService {
     companyId: string,
     counterName: string = 'invoice',
     initialValue: number = 0,
+<<<<<<< HEAD
   ): Promise<CompanyCounter> {
     try {
       const existing = await this.counterRepository.findOne({
@@ -74,6 +82,11 @@ export class InvoiceSequencingService {
       console.error('Error initializing company counter:', error);
       throw error;
     }
+=======
+  ): Promise<any> {
+    // CompanyCounter entity not available
+    return null;
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   /**
@@ -83,11 +96,16 @@ export class InvoiceSequencingService {
     companyId: string,
     counterName: string = 'invoice',
   ): Promise<number> {
+<<<<<<< HEAD
     const counter = await this.counterRepository.findOne({
       where: { companyId, name: counterName },
     });
 
     return counter?.lastValue ?? 0;
+=======
+    // CompanyCounter entity not available
+    return 0;
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   /**
@@ -97,6 +115,7 @@ export class InvoiceSequencingService {
     companyId: string,
     counterName: string = 'invoice',
     value: number = 0,
+<<<<<<< HEAD
   ): Promise<CompanyCounter> {
     let counter = await this.counterRepository.findOne({
       where: { companyId, name: counterName },
@@ -108,5 +127,10 @@ export class InvoiceSequencingService {
 
     counter.lastValue = value;
     return this.counterRepository.save(counter);
+=======
+  ): Promise<any> {
+    // CompanyCounter entity not available
+    return null;
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 }

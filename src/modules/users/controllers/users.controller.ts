@@ -81,6 +81,7 @@ export class UsersController {
     // Check if user is owner or regular user
     const user = await this.usersService.findOneActive(id, companyId);
     
+<<<<<<< HEAD
     if (user.role === 'owner') {
       // Owner: Cascade delete everything
       await this.usersService.deleteOwnerAndCompany(id);
@@ -90,6 +91,11 @@ export class UsersController {
       await this.usersService.remove(id, companyId);
       return { message: 'User deleted successfully' };
     }
+=======
+    // Regular user: Only delete this user
+    await this.usersService.remove(id, companyId);
+    return { message: 'User deleted successfully' };
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   @Patch(':id/restore')
@@ -102,6 +108,7 @@ export class UsersController {
       await this.usersService.update(id, { password: body.newPassword } as any);
     }
     
+<<<<<<< HEAD
     if (user.role === 'owner') {
       // Owner: Restore everything
       await this.usersService.restoreOwnerAndCompany(id);
@@ -160,5 +167,27 @@ export class UsersController {
         }
       };
     }
+=======
+    // Regular user: Only restore this user
+    const restoredUser = await this.usersService.restore(id);
+    
+    // Generate new token for restored user
+    const jti = crypto.randomUUID();
+    const payload = { 
+      sub: restoredUser.id, 
+      email: restoredUser.email,
+      jti
+    };
+    
+    return { 
+      message: 'User restored successfully',
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: restoredUser.id,
+        fullName: restoredUser.fullName,
+        email: restoredUser.email
+      }
+    };
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 }

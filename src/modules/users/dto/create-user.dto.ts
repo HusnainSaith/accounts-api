@@ -2,6 +2,10 @@ import { IsString, IsEmail, IsOptional, IsBoolean, IsEnum } from 'class-validato
 import { UserRole, UserLanguage } from '../entities/user.entity';
 
 export class CreateUserDto {
+  @IsOptional()
+  @IsString()
+  fullName?: string;
+
   @IsString()
   firstName: string;
 

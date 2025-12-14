@@ -16,29 +16,29 @@ export class AuditLogsService {
     return this.auditLogsRepository.save(auditLog);
   }
 
-  async findAll(companyId: string, action?: string, entityType?: string, limit = 100): Promise<AuditLog[]> {
+  async findAll(companyId: string, action?: string, entity?: string, limit = 100): Promise<AuditLog[]> {
     const where: any = { companyId };
     
     if (action) {
       where.action = action;
     }
     
-    if (entityType) {
-      where.entityType = entityType;
+    if (entity) {
+      where.entity = entity;
     }
 
     return this.auditLogsRepository.find({
       where,
-      relations: ['user', 'company'],
+      relations: ['actorUser', 'company'],
       order: { createdAt: 'DESC' },
       take: limit
     });
   }
 
-  async findByEntity(entityType: string, entityId: string): Promise<AuditLog[]> {
+  async findByEntity(entity: string, entityId: string): Promise<AuditLog[]> {
     return this.auditLogsRepository.find({
-      where: { entityType, entityId },
-      relations: ['user'],
+      where: { entity, entityId },
+      relations: ['actorUser'],
       order: { createdAt: 'DESC' }
     });
   }
@@ -46,7 +46,7 @@ export class AuditLogsService {
   async findOne(id: string, companyId: string): Promise<AuditLog> {
     const log = await this.auditLogsRepository.findOne({
       where: { id, companyId },
-      relations: ['user', 'company']
+      relations: ['actorUser', 'company']
     });
     
     if (!log) {
@@ -67,10 +67,10 @@ export class AuditLogsService {
     });
   }
 
-  async findByUser(companyId: string, userId: string): Promise<AuditLog[]> {
+  async findByUser(companyId: string, actorUserId: string): Promise<AuditLog[]> {
     return this.auditLogsRepository.find({
-      where: { companyId, userId },
-      relations: ['user'],
+      where: { companyId, actorUserId },
+      relations: ['actorUser'],
       order: { createdAt: 'DESC' },
       take: 50
     });

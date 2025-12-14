@@ -38,6 +38,7 @@ export class PermissionsGuard implements CanActivate {
       where: { id: user.id }
     });
 
+<<<<<<< HEAD
     if (!userWithRole?.role) {
       throw new ForbiddenException('User has no role assigned');
     }
@@ -62,6 +63,9 @@ export class PermissionsGuard implements CanActivate {
       );
     }
 
+=======
+    // For now, allow all authenticated users
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     return true;
   }
 }

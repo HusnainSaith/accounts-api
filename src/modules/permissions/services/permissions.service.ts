@@ -31,12 +31,12 @@ export class PermissionsService implements OnModuleInit {
     const where: any = {};
     
     if (search) {
-      where.permissionName = Like(`%${search}%`);
+      where.name = Like(`%${search}%`);
     }
 
     return this.permissionsRepository.find({
       where,
-      order: { permissionName: 'ASC' }
+      order: { name: 'ASC' }
     });
   }
 

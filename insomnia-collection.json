@@ -1,0 +1,1497 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "baseurl": "http://localhost:3000",
+  "resources": [
+    {
+      "_id": "req_auth_register",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/register",
+      "name": "Register",
+      "description": "Register new user with complete environment bootstrap",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"companyName\": \"My Company\",\n  \"countryCode\": \"AE\",\n  \"phone\": \"+971501234567\",\n  \"trn\": \"123456789012345\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_login",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/login",
+      "name": "Login",
+      "description": "User login",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_profile",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/profile",
+      "name": "Get Profile",
+      "description": "Get current user profile",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_logout",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/logout",
+      "name": "Logout",
+      "description": "User logout",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_change_password",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/change-password",
+      "name": "Change Password",
+      "description": "Change user password",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_forgot_password",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/forgot-password",
+      "name": "Forgot Password",
+      "description": "Request password reset",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"john.doe@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_auth_reset_password",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/auth/reset-password",
+      "name": "Reset Password",
+      "description": "Reset password with token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"john.doe@example.com\",\n  \"token\": \"reset-token-here\",\n  \"newPassword\": \"newpassword123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_create",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies",
+      "name": "Create Company",
+      "description": "Create new company",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Test Company\",\n  \"countryCode\": \"AE\",\n  \"currencyCode\": \"AED\",\n  \"phone\": \"+971501234567\",\n  \"email\": \"info@testcompany.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_list",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies",
+      "name": "List Companies",
+      "description": "Get all companies",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "activeOnly",
+          "value": "true"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_get",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}",
+      "name": "Get Company",
+      "description": "Get company by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_update",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}",
+      "name": "Update Company",
+      "description": "Update company",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Updated Company Name\",\n  \"phone\": \"+971507654321\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_delete",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}",
+      "name": "Delete Company",
+      "description": "Delete company",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_statistics",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/statistics",
+      "name": "Company Statistics",
+      "description": "Get company statistics",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_by_country",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/country/{{ _.countryCode }}",
+      "name": "Companies by Country",
+      "description": "Get companies by country code",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_stats",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}/stats",
+      "name": "Company Stats",
+      "description": "Get detailed company stats",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_deactivate",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}/deactivate",
+      "name": "Deactivate Company",
+      "description": "Deactivate company",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_companies_activate",
+      "parentId": "fld_companies",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/companies/{{ _.companyId }}/activate",
+      "name": "Activate Company",
+      "description": "Activate company",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_create",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/users",
+      "name": "Create User",
+      "description": "Create new user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"staff\",\n  \"phone\": \"+971501234568\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_list",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/users",
+      "name": "List Users",
+      "description": "Get all users",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "role",
+          "value": ""
+        },
+        {
+          "name": "search",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_get",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/users/{{ _.userId }}",
+      "name": "Get User",
+      "description": "Get user by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_update",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/users/{{ _.userId }}",
+      "name": "Update User",
+      "description": "Update user",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"fullName\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_users_delete",
+      "parentId": "fld_users",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/users/{{ _.userId }}",
+      "name": "Delete User",
+      "description": "Delete user",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_accounts_list",
+      "parentId": "fld_accounts",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/accounts",
+      "name": "List Accounts",
+      "description": "Get chart of accounts",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "type",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_vat",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/vat",
+      "name": "VAT Report",
+      "description": "Generate VAT report",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_get",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/{{ _.invoiceId }}",
+      "name": "Get Invoice",
+      "description": "Get invoice by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_update",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/{{ _.invoiceId }}",
+      "name": "Update Invoice",
+      "description": "Update invoice",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"issued\",\n  \"notes\": \"Updated notes\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_delete",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/{{ _.invoiceId }}",
+      "name": "Delete Invoice",
+      "description": "Delete invoice",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_roles_get",
+      "parentId": "fld_roles",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/roles/{{ _.roleId }}",
+      "name": "Get Role",
+      "description": "Get role by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_roles_update",
+      "parentId": "fld_roles",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/roles/{{ _.roleId }}",
+      "name": "Update Role",
+      "description": "Update role",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Updated Role Name\",\n  \"description\": \"Updated description\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_roles_delete",
+      "parentId": "fld_roles",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/roles/{{ _.roleId }}",
+      "name": "Delete Role",
+      "description": "Delete role",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_permissions_get",
+      "parentId": "fld_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/permissions/{{ _.permissionId }}",
+      "name": "Get Permission",
+      "description": "Get permission by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_permissions_update",
+      "parentId": "fld_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/permissions/{{ _.permissionId }}",
+      "name": "Update Permission",
+      "description": "Update permission",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Updated permission description\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_permissions_delete",
+      "parentId": "fld_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/permissions/{{ _.permissionId }}",
+      "name": "Delete Permission",
+      "description": "Delete permission",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_role_permissions_list",
+      "parentId": "fld_role_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/role-permissions",
+      "name": "List Role Permissions",
+      "description": "Get all role permissions",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "roleId",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_role_permissions_assign",
+      "parentId": "fld_role_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/role-permissions",
+      "name": "Assign Permission to Role",
+      "description": "Assign permission to role",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"roleId\": \"{{ _.roleId }}\",\n  \"permissionId\": \"{{ _.permissionId }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_role_permissions_remove",
+      "parentId": "fld_role_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/role-permissions/{{ _.roleId }}/{{ _.permissionId }}",
+      "name": "Remove Permission from Role",
+      "description": "Remove permission from role",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_audit_logs_list",
+      "parentId": "fld_audit_logs",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/audit-logs",
+      "name": "List Audit Logs",
+      "description": "Get audit logs",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "entity",
+          "value": ""
+        },
+        {
+          "name": "action",
+          "value": ""
+        },
+        {
+          "name": "startDate",
+          "value": ""
+        },
+        {
+          "name": "endDate",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_profit_loss",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/profit-loss",
+      "name": "Profit & Loss Report",
+      "description": "Generate profit and loss report",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_balance_sheet",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/balance-sheet",
+      "name": "Balance Sheet Report",
+      "description": "Generate balance sheet report",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "asOfDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_cash_flow",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/cash-flow",
+      "name": "Cash Flow Report",
+      "description": "Generate cash flow report (GET with query params)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_customers",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/customers",
+      "name": "Customer Report",
+      "description": "Generate customer report",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_dashboard_charts",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/dashboard/charts",
+      "name": "Dashboard Charts",
+      "description": "Get dashboard chart data",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "months",
+          "value": "6"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_expenses_by_category",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/expenses/by-category",
+      "name": "Expenses by Category",
+      "description": "Get expenses grouped by category",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_reports_vat_export_excel",
+      "parentId": "fld_reports",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/reports/vat/export/excel",
+      "name": "Export VAT Report (Excel)",
+      "description": "Export VAT report as Excel file",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "startDate",
+          "value": "2024-01-01"
+        },
+        {
+          "name": "endDate",
+          "value": "2024-01-31"
+        },
+        {
+          "name": "language",
+          "value": "en"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_permissions_list",
+      "parentId": "fld_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/permissions",
+      "name": "List Permissions",
+      "description": "Get all permissions",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "search",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_permissions_create",
+      "parentId": "fld_permissions",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/permissions",
+      "name": "Create Permission",
+      "description": "Create new permission",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"custom.permission\",\n  \"description\": \"Custom permission description\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_roles_list",
+      "parentId": "fld_roles",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/roles",
+      "name": "List Roles",
+      "description": "Get all roles",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_roles_create",
+      "parentId": "fld_roles",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/roles",
+      "name": "Create Role",
+      "description": "Create new role",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"code\": \"manager\",\n  \"name\": \"Manager\",\n  \"description\": \"Manager role with specific permissions\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_constants_create",
+      "parentId": "fld_constants",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/constants",
+      "name": "Create Constant",
+      "description": "Create new constant (customer/supplier)",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"code\": \"CUST001\",\n  \"name\": \"ABC Company\",\n  \"type\": \"customer\",\n  \"email\": \"contact@abccompany.com\",\n  \"phone\": \"+971501234569\",\n  \"address\": \"Dubai, UAE\",\n  \"taxRegistrationNo\": \"123456789012345\",\n  \"creditLimit\": 10000,\n  \"paymentTerms\": 30\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_constants_list",
+      "parentId": "fld_constants",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/constants",
+      "name": "List Constants",
+      "description": "Get all constants",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "type",
+          "value": "customer"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_constants_get",
+      "parentId": "fld_constants",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/constants/{{ _.constantId }}",
+      "name": "Get Constant",
+      "description": "Get constant by ID",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_constants_update",
+      "parentId": "fld_constants",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/constants/{{ _.constantId }}",
+      "name": "Update Constant",
+      "description": "Update constant",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Updated Company Name\",\n  \"phone\": \"+971507654321\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_constants_delete",
+      "parentId": "fld_constants",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/constants/{{ _.constantId }}",
+      "name": "Delete Constant",
+      "description": "Delete constant",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_create",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices",
+      "name": "Create Invoice",
+      "description": "Create new invoice",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"customerId\": \"{{ _.customerId }}\",\n  \"invoiceDate\": \"2024-01-01\",\n  \"dueDate\": \"2024-01-31\",\n  \"currencyCode\": \"AED\",\n  \"subtotal\": 1000.00,\n  \"taxAmount\": 50.00,\n  \"totalAmount\": 1050.00,\n  \"notes\": \"Test invoice\",\n  \"lines\": [\n    {\n      \"description\": \"Service 1\",\n      \"quantity\": 1,\n      \"unitPrice\": 1000.00,\n      \"taxPercent\": 5.00,\n      \"lineTotal\": 1050.00\n    }\n  ]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_list",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices",
+      "name": "List Invoices",
+      "description": "Get all invoices",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "status",
+          "value": ""
+        }
+      ],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_generate_number",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/generate-number",
+      "name": "Generate Invoice Number",
+      "description": "Generate next invoice number",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_statistics",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/statistics",
+      "name": "Invoice Statistics",
+      "description": "Get invoice statistics",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_mark_sent",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/{{ _.invoiceId }}/send",
+      "name": "Mark Invoice as Sent",
+      "description": "Mark invoice as sent",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_invoices_mark_paid",
+      "parentId": "fld_invoices",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request",
+      "url": "{{ _.baseUrl }}/invoices/{{ _.invoiceId }}/paid",
+      "name": "Mark Invoice as Paid",
+      "description": "Mark invoice as paid",
+      "method": "PATCH",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ]
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Authentication",
+      "description": "Authentication endpoints"
+    },
+    {
+      "_id": "fld_companies",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Companies",
+      "description": "Company management endpoints"
+    },
+    {
+      "_id": "fld_users",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Users",
+      "description": "User management endpoints"
+    },
+    {
+      "_id": "fld_permissions",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Permissions",
+      "description": "Permission management endpoints"
+    },
+    {
+      "_id": "fld_roles",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Roles",
+      "description": "Role management endpoints"
+    },
+    {
+      "_id": "fld_constants",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Constants",
+      "description": "Constants (customers/suppliers) management endpoints"
+    },
+    {
+      "_id": "fld_accounts",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Accounts",
+      "description": "Chart of accounts management endpoints"
+    },
+    {
+      "_id": "fld_reports",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Reports",
+      "description": "Financial reports endpoints"
+    },
+    {
+      "_id": "fld_role_permissions",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Role Permissions",
+      "description": "Role permission management endpoints"
+    },
+    {
+      "_id": "fld_audit_logs",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Audit Logs",
+      "description": "Audit log endpoints"
+    },
+    {
+      "_id": "fld_invoices",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "request_group",
+      "name": "Invoices",
+      "description": "Invoice management endpoints"
+    },
+    {
+      "_id": "wrk_main",
+      "parentId": null,
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "workspace",
+      "name": "Lab Accounts API",
+      "description": "Complete API collection for Lab Accounts Backend"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_main",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:3000",
+        "token": "",
+        "companyId": "",
+        "userId": "",
+        "constantId": "",
+        "invoiceId": "",
+        "roleId": "",
+        "permissionId": "",
+        "countryCode": "AE"
+      },
+      "dataPropertyOrder": {
+        "&": ["baseUrl", "token", "companyId", "userId", "constantId", "invoiceId", "roleId", "permissionId", "countryCode"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704067200000
+    }
+  ]
+}

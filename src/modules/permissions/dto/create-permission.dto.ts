@@ -3,7 +3,7 @@ import { IsString, MinLength, IsOptional } from 'class-validator';
 export class CreatePermissionDto {
   @IsString()
   @MinLength(2)
-  permissionName: string;
+  name: string;
 
   @IsOptional()
   @IsString()

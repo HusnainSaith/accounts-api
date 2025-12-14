@@ -2,8 +2,12 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { Invoice, InvoiceStatus } from '../../invoices/entities/invoice.entity';
+<<<<<<< HEAD
 import { Customer } from '../../customers/entities/customer.entity';
 import { Expense } from '../../expenses/entities/expense.entity';
+=======
+import { Constant, ConstantType } from '../../constant/entities/constant.entity';
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 import { VatReportDto, ProfitLossReportDto, BalanceSheetReportDto, CashFlowReportDto } from '../dto/report.dto';
 
 @Injectable()
@@ -11,10 +15,15 @@ export class ReportsService {
   constructor(
     @InjectRepository(Invoice)
     private invoicesRepository: Repository<Invoice>,
+<<<<<<< HEAD
     @InjectRepository(Customer)
     private customersRepository: Repository<Customer>,
     @InjectRepository(Expense)
     private expensesRepository: Repository<Expense>,
+=======
+    @InjectRepository(Constant)
+    private constantsRepository: Repository<Constant>,
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   ) {}
 
   async generateVatReport(vatReportDto: VatReportDto) {
@@ -25,7 +34,7 @@ export class ReportsService {
         companyId: vatReportDto.companyId,
         createdAt: Between(vatReportDto.startDate, vatReportDto.endDate)
       },
-      relations: ['customer'],
+      relations: ['party'],
       order: { createdAt: 'ASC' }
     });
 
@@ -47,7 +56,7 @@ export class ReportsService {
         id: inv.id,
         invoiceNumber: inv.invoiceNumber,
         date: inv.createdAt,
-        customer: inv.customer?.name || 'Unknown',
+        customer: (inv.party as any)?.name || 'Unknown',
         subtotal: Number(inv.subtotal),
         vatAmount: Number(inv.vatAmount),
         total: Number(inv.totalAmount)
@@ -83,8 +92,13 @@ export class ReportsService {
     const revenue = paidInvoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
     const vatCollected = paidInvoices.reduce((sum, inv) => sum + Number(inv.vatAmount), 0);
     const totalInvoiced = allInvoices.reduce((sum, inv) => sum + Number(inv.subtotal), 0);
+<<<<<<< HEAD
     const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
     const vatPaid = expenses.reduce((sum, exp) => sum + Number(exp.vatAmount || 0), 0);
+=======
+    const totalExpenses = 0; // Expenses module not available
+    const vatPaid = 0; // Expenses module not available
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     const netProfit = revenue - totalExpenses;
 
     return {
@@ -97,7 +111,11 @@ export class ReportsService {
       expenses: {
         total: totalExpenses,
         vatPaid,
+<<<<<<< HEAD
         count: expenses.length
+=======
+        count: 0
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       },
       profitLoss: {
         grossProfit: revenue,
@@ -179,8 +197,8 @@ export class ReportsService {
   async generateCustomerReport(companyId: string, startDate: Date, endDate: Date) {
     this.validateDateRange(startDate, endDate);
 
-    const customers = await this.customersRepository.find({
-      where: { companyId },
+    const customers = await this.constantsRepository.find({
+      where: { companyId, type: ConstantType.CUSTOMER },
       relations: ['invoices']
     });
 
@@ -188,7 +206,7 @@ export class ReportsService {
       customers.map(async (customer) => {
         const invoices = await this.invoicesRepository.find({
           where: {
-            customerId: customer.id,
+            partyId: customer.id,
             createdAt: Between(startDate, endDate)
           }
         });
@@ -200,7 +218,7 @@ export class ReportsService {
         return {
           customerId: customer.id,
           customerName: customer.name,
-          customerType: customer.customerType,
+          customerType: customer.type,
           totalInvoices: invoices.length,
           paidInvoices: paidInvoices.length,
           totalInvoiced,
@@ -228,6 +246,7 @@ export class ReportsService {
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - months);
 
+<<<<<<< HEAD
     const [invoices, expenses] = await Promise.all([
       this.invoicesRepository
         .createQueryBuilder('invoice')
@@ -252,6 +271,22 @@ export class ReportsService {
         .orderBy('month', 'ASC')
         .getRawMany(),
     ]);
+=======
+    const invoices = await this.invoicesRepository
+      .createQueryBuilder('invoice')
+      .select('DATE_TRUNC(\'month\', invoice.createdAt)', 'month')
+      .addSelect('SUM(invoice.subtotal)', 'revenue')
+      .addSelect('SUM(invoice.vatAmount)', 'vat')
+      .addSelect('COUNT(invoice.id)', 'count')
+      .where('invoice.companyId = :companyId', { companyId })
+      .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
+      .andWhere('invoice.createdAt >= :startDate', { startDate })
+      .groupBy('DATE_TRUNC(\'month\', invoice.createdAt)')
+      .orderBy('month', 'ASC')
+      .getRawMany();
+    
+    const expenses: any[] = []; // Expenses module not available
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
     const chartData: any[] = [];
     for (let i = 0; i < months; i++) {
@@ -260,16 +295,28 @@ export class ReportsService {
       const monthKey = date.toISOString().substring(0, 7);
 
       const invoiceData = invoices.find((inv) => inv.month?.substring(0, 7) === monthKey);
+<<<<<<< HEAD
       const expenseData = expenses.find((exp) => exp.month?.substring(0, 7) === monthKey);
+=======
+      const expenseData = null; // Expenses module not available
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
       chartData.push({
         month: monthKey,
         revenue: Number(invoiceData?.revenue || 0),
+<<<<<<< HEAD
         expenses: Number(expenseData?.total || 0),
         netProfit: Number(invoiceData?.revenue || 0) - Number(expenseData?.total || 0),
         vat: Number(invoiceData?.vat || 0),
         invoiceCount: Number(invoiceData?.count || 0),
         expenseCount: Number(expenseData?.count || 0),
+=======
+        expenses: 0,
+        netProfit: Number(invoiceData?.revenue || 0),
+        vat: Number(invoiceData?.vat || 0),
+        invoiceCount: Number(invoiceData?.count || 0),
+        expenseCount: 0,
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       });
     }
 
@@ -277,6 +324,7 @@ export class ReportsService {
   }
 
   async getExpensesByCategory(companyId: string, startDate: Date, endDate: Date) {
+<<<<<<< HEAD
     return this.expensesRepository
       .createQueryBuilder('expense')
       .select('category.name_en', 'categoryName')
@@ -291,6 +339,10 @@ export class ReportsService {
       .addGroupBy('category.name_ar')
       .orderBy('totalAmount', 'DESC')
       .getRawMany();
+=======
+    // Expenses module not available
+    return [];
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   private validateDateRange(startDate: Date, endDate: Date) {

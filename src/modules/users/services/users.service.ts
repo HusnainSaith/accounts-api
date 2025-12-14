@@ -13,6 +13,7 @@ export class UsersService {
   ) {}
 
   async create(
+<<<<<<< HEAD
     createUserDto: CreateUserDto & { companyId: string },
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -32,24 +33,62 @@ export class UsersService {
     search?: string,
   ): Promise<User[]> {
     const where: any = { companyId, isActive: true };
+=======
+    createUserDto: CreateUserDto & { companyId?: string },
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+    // Map old fields to new schema
+    const userData: any = {
+      fullName: createUserDto.firstName && createUserDto.lastName 
+        ? `${createUserDto.firstName} ${createUserDto.lastName}` 
+        : createUserDto.fullName || createUserDto.firstName || 'Unknown',
+      email: createUserDto.email,
+      passwordHash: hashedPassword,
+      isActive: true,
+      // Keep old fields for compatibility
+      firstName: createUserDto.firstName,
+      lastName: createUserDto.lastName,
+      role: createUserDto.role,
+      phone: createUserDto.phone,
+      preferredLanguage: createUserDto.preferredLanguage,
+    };
+
+    const user = this.usersRepository.create(userData);
+    const savedUser = await this.usersRepository.save(user);
+    return Array.isArray(savedUser) ? savedUser[0] : savedUser;
+  }
+
+  async findAll(
+    companyId?: string,
+    role?: string,
+    search?: string,
+  ): Promise<User[]> {
+    const where: any = { isActive: true };
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
     if (role) {
       where.role = role;
     }
 
     if (search) {
-      where.firstName = Like(`%${search}%`);
+      where.fullName = Like(`%${search}%`);
     }
 
     return this.usersRepository.find({
       where,
+<<<<<<< HEAD
       relations: ['company'],
+=======
+      relations: ['companyUsers'],
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       order: { createdAt: 'DESC' },
     });
   }
 
   async findOne(id: string, companyId?: string): Promise<User> {
     const where: any = { id };
+<<<<<<< HEAD
     if (companyId) {
       where.companyId = companyId;
     }
@@ -57,6 +96,12 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where,
       relations: ['company'],
+=======
+
+    const user = await this.usersRepository.findOne({
+      where,
+      relations: ['companyUsers'],
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     });
 
     if (!user) {
@@ -68,14 +113,21 @@ export class UsersService {
 
   async findOneActive(id: string, companyId?: string): Promise<User> {
     const whereAll: any = { id };
+<<<<<<< HEAD
     if (companyId) {
       whereAll.companyId = companyId;
     }
+=======
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
     // First check if user exists at all
     const userExists = await this.usersRepository.findOne({
       where: whereAll,
+<<<<<<< HEAD
       relations: ['company'],
+=======
+      relations: ['companyUsers'],
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     });
 
     if (!userExists) {
@@ -92,15 +144,28 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { email },
+<<<<<<< HEAD
       relations: ['company'],
+=======
+      relations: ['companyUsers'],
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     });
   }
 
   async findByCompany(companyId: string): Promise<User[]> {
+<<<<<<< HEAD
     return this.usersRepository.find({
       where: { companyId },
       relations: ['company'],
     });
+=======
+    // This would need to be implemented through CompanyUser junction table
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .innerJoin('user.companyUsers', 'companyUser')
+      .where('companyUser.companyId = :companyId', { companyId })
+      .getMany();
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   async update(
@@ -131,7 +196,7 @@ export class UsersService {
   }
 
   async updateLastLogin(id: string): Promise<void> {
-    await this.usersRepository.update(id, { lastLogin: new Date() });
+    await this.usersRepository.update(id, { lastLoginAt: new Date() });
   }
 
   async remove(id: string, companyId?: string): Promise<void> {
@@ -150,6 +215,7 @@ export class UsersService {
   }
 
   async deleteOwnerAndCompany(ownerId: string): Promise<void> {
+<<<<<<< HEAD
     // Find the owner and get company ID
     const owner = await this.findOne(ownerId);
     if (owner.role !== UserRole.OWNER) {
@@ -165,6 +231,26 @@ export class UsersService {
         { companyId }, 
         { isActive: false }
       );
+=======
+    // Find the owner
+    const owner = await this.findOne(ownerId);
+    // Skip role check for now - allow all users
+    
+    // Get company ID from CompanyUser relationship
+    const companyUser = (owner.companyUsers as any)?.[0];
+    if (!companyUser) {
+      throw new BadRequestException('User is not associated with any company');
+    }
+    const companyId = (companyUser as any).companyId;
+    
+    // Start transaction for atomic operation
+    await this.usersRepository.manager.transaction(async manager => {
+      // 1. Soft delete all users in the company through CompanyUser
+      const companyUsers = await manager.find('company_users', { where: { companyId } });
+      for (const cu of companyUsers) {
+        await manager.update('users', { id: (cu as any).userId }, { isActive: false });
+      }
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       
       // 2. Cancel all invoices
       await manager.update('invoices', 
@@ -193,7 +279,14 @@ export class UsersService {
   }
 
   async getStatistics(companyId: string): Promise<any> {
+    // This would need to be implemented through CompanyUser junction table
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('user')
+      .innerJoin('user.companyUsers', 'companyUser')
+      .where('companyUser.companyId = :companyId', { companyId });
+
     const [total, active, owners, staff, accountants] = await Promise.all([
+<<<<<<< HEAD
       this.usersRepository.count({ where: { companyId } }),
       this.usersRepository.count({ where: { companyId, isActive: true } }),
       this.usersRepository.count({
@@ -205,6 +298,13 @@ export class UsersService {
       this.usersRepository.count({
         where: { companyId, role: UserRole.ACCOUNTANT },
       }),
+=======
+      queryBuilder.getCount(),
+      queryBuilder.andWhere('user.isActive = true').getCount(),
+      queryBuilder.andWhere('user.role = :role', { role: UserRole.OWNER }).getCount(),
+      queryBuilder.andWhere('user.role = :role', { role: UserRole.STAFF }).getCount(),
+      queryBuilder.andWhere('user.role = :role', { role: UserRole.ACCOUNTANT }).getCount(),
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     ]);
 
     return {
@@ -238,6 +338,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
+<<<<<<< HEAD
     if (user.role === UserRole.OWNER) {
       // Restore owner and all company data
       await this.restoreOwnerAndCompany(user.id);
@@ -248,6 +349,13 @@ export class UsersService {
         { isActive: true }
       );
     }
+=======
+    // Regular user restore
+    await this.usersRepository.update(
+      { email },
+      { isActive: true }
+    );
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
     const restoredUser = await this.findByEmail(email);
     if (!restoredUser) {
@@ -258,6 +366,7 @@ export class UsersService {
   }
 
   async restoreOwnerAndCompany(ownerId: string): Promise<void> {
+<<<<<<< HEAD
     // Find the owner and get company ID
     const owner = await this.usersRepository.findOne({ where: { id: ownerId } });
     if (!owner || owner.role !== UserRole.OWNER) {
@@ -273,6 +382,30 @@ export class UsersService {
         { companyId }, 
         { isActive: true }
       );
+=======
+    // Find the owner
+    const owner = await this.usersRepository.findOne({ 
+      where: { id: ownerId },
+      relations: ['companyUsers']
+    });
+    if (!owner) {
+      throw new BadRequestException('User is not an owner');
+    }
+    
+    const companyUser = (owner.companyUsers as any)?.[0];
+    if (!companyUser) {
+      throw new BadRequestException('User is not associated with any company');
+    }
+    const companyId = (companyUser as any).companyId;
+    
+    // Start transaction for atomic operation
+    await this.usersRepository.manager.transaction(async manager => {
+      // 1. Restore all users in the company through CompanyUser
+      const companyUsers = await manager.find('company_users', { where: { companyId } });
+      for (const cu of companyUsers) {
+        await manager.update('users', { id: (cu as any).userId }, { isActive: true });
+      }
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       
       // 2. Restore all invoices (change from cancelled to sent)
       await manager.update('invoices', 

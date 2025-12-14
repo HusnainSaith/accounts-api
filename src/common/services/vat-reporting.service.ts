@@ -2,15 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, Between } from 'typeorm';
 import { Invoice } from '../../modules/invoices/entities/invoice.entity';
+<<<<<<< HEAD
 import { Expense } from '../../modules/expenses/entities/expense.entity';
+=======
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
 
 @Injectable()
 export class VatReportingService {
   constructor(
     @InjectRepository(Invoice)
     private invoiceRepository: Repository<Invoice>,
+<<<<<<< HEAD
     @InjectRepository(Expense)
     private expenseRepository: Repository<Expense>,
+=======
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     private dataSource: DataSource,
   ) {}
 
@@ -36,6 +42,7 @@ export class VatReportingService {
       })
       .getRawOne();
 
+<<<<<<< HEAD
     // Get purchase/expense data
     const purchaseData = await this.expenseRepository
       .createQueryBuilder('expense')
@@ -54,6 +61,15 @@ export class VatReportingService {
     const vatCollected = parseFloat(salesData?.vatCollected || 0);
     const totalPurchases = parseFloat(purchaseData?.totalPurchases || 0);
     const vatPaid = parseFloat(purchaseData?.vatPaid || 0);
+=======
+    // Purchase/expense data not available - expenses module missing
+    const purchaseData = { totalPurchases: 0, vatPaid: 0, expenseCount: 0 };
+
+    const totalSales = parseFloat(salesData?.totalSales || 0);
+    const vatCollected = parseFloat(salesData?.vatCollected || 0);
+    const totalPurchases = purchaseData?.totalPurchases || 0;
+    const vatPaid = purchaseData?.vatPaid || 0;
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     const netVat = vatCollected - vatPaid;
 
     return {
@@ -69,7 +85,11 @@ export class VatReportingService {
       purchases: {
         totalAmount: totalPurchases,
         vatAmount: vatPaid,
+<<<<<<< HEAD
         expenseCount: parseInt(purchaseData?.expenseCount || 0),
+=======
+        expenseCount: purchaseData?.expenseCount || 0,
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
       },
       vat: {
         collected: vatCollected,
@@ -145,6 +165,7 @@ export class VatReportingService {
     startDate: Date,
     endDate: Date,
   ): Promise<any> {
+<<<<<<< HEAD
     const result = await this.expenseRepository
       .createQueryBuilder('expense')
       .select('SUM(expense.amount)', 'totalAmount')
@@ -162,6 +183,13 @@ export class VatReportingService {
       totalAmount: parseFloat(result?.totalAmount || 0),
       vatAmount: parseFloat(result?.vatAmount || 0),
       count: parseInt(result?.count || 0),
+=======
+    // Expenses module not available
+    return {
+      totalAmount: 0,
+      vatAmount: 0,
+      count: 0,
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
     };
   }
 
@@ -191,6 +219,7 @@ export class VatReportingService {
    * Get monthly expense trend
    */
   async getMonthlyExpenseTrend(companyId: string, year: number): Promise<any[]> {
+<<<<<<< HEAD
     return this.dataSource.query(
       `
       SELECT
@@ -206,6 +235,10 @@ export class VatReportingService {
       `,
       [companyId, year],
     );
+=======
+    // Expenses module not available
+    return [];
+>>>>>>> 61eba44dece6bdeb0ab11f5b6b4ff14e43b71f7f
   }
 
   /**

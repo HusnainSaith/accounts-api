@@ -22,9 +22,10 @@ export class RegisterDto {
   @MinLength(8)
   password: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(2)
-  companyName: string;
+  companyName?: string;
 
   @IsOptional()
   @IsString()

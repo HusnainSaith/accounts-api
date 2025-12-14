@@ -12,10 +12,10 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.DB_DATABASE || 'accounts_api',
 
   // Use glob pattern for entities
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../modules/**/*.entity{.ts,.js}'],
 
-  // This matches migration files in src/migrations folder
-  migrations: [__dirname + '/../migrations/*.{ts,js}'],
+  // This matches migration files in src/database/migrations folder
+  migrations: [__dirname + '/../database/migrations/*.{ts,js}'],
 
   // Always use migrations in production!
   synchronize: false,

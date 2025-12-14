@@ -1,12 +1,21 @@
-import { IsString, MinLength, IsOptional } from 'class-validator';
+import { IsString, MinLength, IsOptional, IsBoolean } from 'class-validator';
 
 export class UpdateRoleDto {
   @IsOptional()
   @IsString()
-  @MinLength(2)
-  roleName?: string;
+  companyId?: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  @MinLength(2)
+  code?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  name?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isSystem?: boolean;
 }
